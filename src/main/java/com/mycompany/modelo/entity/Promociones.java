@@ -4,10 +4,13 @@
  */
 package com.mycompany.modelo.entity;
 
+import java.util.List;
+
 /**
  *
  * @author Alison Martinez
  */
 public class Promociones {
-    
+    float descuento;
+    List <String> tipo;
 }
