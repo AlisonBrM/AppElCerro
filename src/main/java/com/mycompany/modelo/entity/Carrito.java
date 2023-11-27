@@ -12,10 +12,43 @@ import java.util.List;
  * @author Alison Martinez
  */
 public class Carrito {
-    List <Producto> listaProductos;
+    private int id;
+    private String fecha;
+
+    public Carrito(int id, String fecha) {
+        this.id = id;
+        this.fecha = fecha;
+    }
 
     public Carrito() {
-        ArrayList <Producto> listaProductos = new ArrayList();
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the fecha
+     */
+    public String getFecha() {
+        return fecha;
+    }
+
+    /**
+     * @param fecha the fecha to set
+     */
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
     
     

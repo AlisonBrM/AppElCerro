@@ -13,22 +13,19 @@ public class Usuario {
     private String nombre;
     private String direccion;
     private String correo;
+    private String telefono;
     //FormasDePago pago;
 
-    public Usuario(String cedula, String nombre, String direccion, String correo) {
+    public Usuario(String cedula, String nombre, String direccion, String correo, String telefono) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.direccion = direccion;
         this.correo = correo;
-    }
-
-    public Usuario(String cedula) {
-        this.cedula = cedula;
+        this.telefono = telefono;
     }
 
     public Usuario() {
     }
-    
 
     /**
      * @return the cedula
@@ -85,5 +82,19 @@ public class Usuario {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
-    
-}
+
+    /**
+     * @return the telefono
+     */
+    public String getTelefono() {
+        return telefono;
+    }
+
+    /**
+     * @param telefono the telefono to set
+     */
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+}   
