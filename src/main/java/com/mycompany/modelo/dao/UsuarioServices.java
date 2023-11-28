@@ -4,10 +4,17 @@
  */
 package com.mycompany.modelo.dao;
 
+import com.mycompany.modelo.entity.Usuario;
+import java.util.List;
+
 /**
  *
  * @author forer
  */
-public class UsuarioServices {
-    
+public interface UsuarioServices {
+    public List<Usuario> consultar();
+    public Usuario consultarId(Usuario usuario);
+    public int crear(Usuario usuario);
+    public int eliminar(Usuario usuario);
+    public int actualizar(Usuario usuario);
 }

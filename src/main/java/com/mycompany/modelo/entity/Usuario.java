@@ -27,6 +27,10 @@ public class Usuario {
     public Usuario() {
     }
 
+    public Usuario(String cedula) {
+        this.cedula = cedula;
+    }
+
     /**
      * @return the cedula
      */
@@ -95,6 +99,11 @@ public class Usuario {
      */
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" + "cedula=" + cedula + ", nombre=" + nombre + ", direccion=" + direccion + ", correo=" + correo + ", telefono=" + telefono + '}';
     }
 
 }   
