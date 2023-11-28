@@ -5,6 +5,7 @@
 package com.mycompany.modelo.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,14 +14,23 @@ import java.util.List;
  */
 public class Carrito {
     private int id;
-    private String fecha;
+    private Usuario id_usuario;
+    private Producto id_producto;
+    private Date fecha;
 
-    public Carrito(int id, String fecha) {
+    
+    public Carrito() {
+    }
+
+    public Carrito(int id, Usuario id_usuario, Producto id_producto, Date fecha) {
         this.id = id;
+        this.id_usuario = id_usuario;
+        this.id_producto = id_producto;
         this.fecha = fecha;
     }
 
-    public Carrito() {
+    public Carrito(int id) {
+        this.id = id;
     }
 
     /**
@@ -38,18 +48,50 @@ public class Carrito {
     }
 
     /**
+     * @return the id_usuario
+     */
+    public Usuario getId_usuario() {
+        return id_usuario;
+    }
+
+    /**
+     * @param id_usuario the id_usuario to set
+     */
+    public void setId_usuario(Usuario id_usuario) {
+        this.id_usuario = id_usuario;
+    }
+
+    /**
+     * @return the id_producto
+     */
+    public Producto getId_producto() {
+        return id_producto;
+    }
+
+    /**
+     * @param id_producto the id_producto to set
+     */
+    public void setId_producto(Producto id_producto) {
+        this.id_producto = id_producto;
+    }
+
+    /**
      * @return the fecha
      */
-    public String getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
     /**
      * @param fecha the fecha to set
      */
-    public void setFecha(String fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
+
+    
+
+    
     
     
 }

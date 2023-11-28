@@ -30,6 +30,8 @@ public class Usuario {
     public Usuario(String cedula) {
         this.cedula = cedula;
     }
+    
+    
 
     /**
      * @return the cedula
