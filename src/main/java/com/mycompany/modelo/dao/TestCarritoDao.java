@@ -8,8 +8,7 @@ import com.mycompany.modelo.entity.Producto;
 import com.mycompany.modelo.entity.Usuario;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.util.Date;
 
 /**

@@ -13,25 +13,25 @@ import java.util.List;
  * @author forer
  */
 public class ProductoController {
-    ProductosDao destino = new ProductosDao();
+    ProductosDao producto = new ProductosDao();
     
     public List <Producto> consultar(){
-        return destino.consultar();
+        return producto.consultar();
     }
     
     public Producto consultarId(Producto productoId){
-        return destino.consultarId(productoId);
+        return producto.consultarId(productoId);
     }
     
     public int crear (Producto productoCrear){
-        return destino.crear(productoCrear);
+        return producto.crear(productoCrear);
     }
     
     public int eliminar(Producto productoEliminar){
-        return destino.eliminar(productoEliminar);
+        return producto.eliminar(productoEliminar);
     }
     
     public int actualizar(Producto productoActualizar){
-        return destino.actualizar(productoActualizar);
+        return producto.actualizar(productoActualizar);
     }
 }
