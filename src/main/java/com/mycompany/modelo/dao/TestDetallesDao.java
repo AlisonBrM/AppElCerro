@@ -16,14 +16,14 @@ import com.mycompany.modelo.entity.Producto;
 public class TestDetallesDao {
     public static void main(String[] args) {
         DetallesDao d = new DetallesDao();
-        Carrito car = new Carrito(2);
+        Carrito car = new Carrito(1);
         Producto p = new Producto("0");
         int r = 0;
-        //r = d.crear(new Detalles(car, p, 4));
-        //r = d.eliminar(new Detalles(car), p.getId());
-        //r = d.agregarProducto(new Detalles(car, p));
+        //r = d.crear(new Detalles(car, p, 1));
+        //r = d.restarProducto(new Detalles(car, p));
+        //r = d.sumarProducto(new Detalles(car, p));
         
-        //System.out.println(d.consultarId(new Detalles(car)));
+        System.out.println(d.consultarId(new Detalles(car)));
         //System.out.println(d.consultar());
         System.out.println(r);
     }

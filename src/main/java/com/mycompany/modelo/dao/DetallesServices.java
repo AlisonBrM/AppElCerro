@@ -16,6 +16,6 @@ public interface DetallesServices {
     public List<Detalles> consultarId(Detalles detalles);
     public int crear(Detalles detalles);
     //public int eliminar(Detalles detalles);
-    public int eliminarProducto(Detalles detalles);
-    public int agregarProducto(Detalles detalles);
+    public int restarProducto(Detalles detalles);
+    public int sumarProducto(Detalles detalles);
 }

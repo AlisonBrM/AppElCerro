@@ -25,8 +25,8 @@ public class DetallesDao implements DetallesServices {
 
     private final String sql = "SELECT * FROM detalle";
     private final String SQL_CONSULTAID = "SELECT * FROM detalle WHERE id_carrito = ?";
+    private final String SQL_BUSCAR_PRODUCTO = "SELECT * FROM detalle WHERE id_producto = ?";
     private final String SQL_INSERTAR = "INSERT INTO detalle(id_carrito, id_producto, cantidad) VALUES(?,?,?)";
-    //private final String SQL_BORRAR = "DELETE FROM detalle WHERE id = ?";
     private final String SQL_BORRAR_PRODUCTO = "UPDATE detalle SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ?";
     private final String SQL_AGREGAR_PORDUCTO = "UPDATE detalle SET cantidad = cantidad + 1 WHERE id_carrito = ? AND id_producto = ?";
     List<Detalles> detalles = new ArrayList<>();
@@ -63,50 +63,53 @@ public class DetallesDao implements DetallesServices {
     }
 
     @Override
-   public List<Detalles> consultarId(Detalles detalles) {
-    List<Detalles> detallesList = new ArrayList<>();
+    public List<Detalles> consultarId(Detalles detalles) {
+        List<Detalles> detallesList = new ArrayList<>();
 
-    try {
-        BaseDeDatos db = BaseDeDatos.getInstance();
-        Connection connec = db.getConnection();
-        PreparedStatement stm = connec.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
-        stm.setInt(1, detalles.getId_carrito().getId());
-        ResultSet rs = stm.executeQuery();
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
+            PreparedStatement stm = connec.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
+            stm.setInt(1, detalles.getId_carrito().getId());
+            ResultSet rs = stm.executeQuery();
 
-        while (rs.next()) {
-            CarritoDao carritoDao = new CarritoDao();
-            ProductosDao productoDao = new ProductosDao();
+            while (rs.next()) {
+                CarritoDao carritoDao = new CarritoDao();
+                ProductosDao productoDao = new ProductosDao();
 
-            Carrito id_carrito = carritoDao.consultarId(new Carrito(rs.getInt("id_carrito")));
-            Producto id_producto = productoDao.consultarId(new Producto(rs.getString("id_producto")));
-            int cantidad = rs.getInt("cantidad");
+                Carrito id_carrito = carritoDao.consultarId(new Carrito(rs.getInt("id_carrito")));
+                Producto id_producto = productoDao.consultarId(new Producto(rs.getString("id_producto")));
+                int cantidad = rs.getInt("cantidad");
 
-            Detalles detallesL = new Detalles(id_carrito, id_producto, cantidad);
-            detallesList.add(detallesL);
+                Detalles detallesL = new Detalles(id_carrito, id_producto, cantidad);
+                detallesList.add(detallesL);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
 
-    } catch (SQLException ex) {
-        System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
-        JOptionPane.showMessageDialog(null, ex.getMessage());
+        return detallesList;
     }
-
-    return detallesList;
-}
 
     @Override
     public int crear(Detalles detalles) {
         int registros = 0;
         try {
-            BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
+            if (existeProducto(detalles.getId_producto().getId())) {
+                sumarProducto(detalles);
+            } else {
+                BaseDeDatos db = BaseDeDatos.getInstance();
+                Connection connec = db.getConnection();
 
-            PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
-            stm.setInt(1, detalles.getId_carrito().getId());
-            stm.setString(2, detalles.getId_producto().getId());
-            stm.setInt(3, detalles.getCantidad());
+                PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
+                stm.setInt(1, detalles.getId_carrito().getId());
+                stm.setString(2, detalles.getId_producto().getId());
+                stm.setInt(3, detalles.getCantidad());
 
-            registros = stm.executeUpdate();
-
+                registros = stm.executeUpdate();
+            }
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -115,26 +118,8 @@ public class DetallesDao implements DetallesServices {
         return registros;
     }
 
-    /*@Override
-    public int eliminar(Detalles detalles) {
-        int registros = 0;
-        try {
-            BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_BORRAR);
-            stm.setInt(1, detalles.getId_carrito().getId());
-            registros = stm.executeUpdate();
-
-        } catch (SQLException ex) {
-            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-
-        }
-        return registros;
-
-    }*/
     @Override
-    public int eliminarProducto(Detalles detalles) {
+    public int restarProducto(Detalles detalles) {
         int registros = 0;
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
@@ -155,8 +140,9 @@ public class DetallesDao implements DetallesServices {
     }
 
     @Override
-    public int agregarProducto(Detalles detalles) {
+    public int sumarProducto(Detalles detalles) {
         int registros = 0;
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             Connection connec = db.getConnection();
@@ -173,5 +159,25 @@ public class DetallesDao implements DetallesServices {
 
         }
         return registros;
+    }
+
+    public boolean existeProducto(String idProducto) {
+        boolean existe = false;
+
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
+            PreparedStatement stm = connec.prepareStatement(SQL_BUSCAR_PRODUCTO);
+            stm.setString(1, idProducto);
+            ResultSet rs = stm.executeQuery();
+
+            existe = rs.next();
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+
+        return existe;
     }
 }
