@@ -4,9 +4,7 @@
  */
 package com.mycompany.modelo.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -15,17 +13,15 @@ import java.util.List;
 public class Carrito {
     private int id;
     private Usuario id_usuario;
-    private Producto id_producto;
     private Date fecha;
 
     
     public Carrito() {
     }
 
-    public Carrito(int id, Usuario id_usuario, Producto id_producto, Date fecha) {
+    public Carrito(int id, Usuario id_usuario, Date fecha) {
         this.id = id;
         this.id_usuario = id_usuario;
-        this.id_producto = id_producto;
         this.fecha = fecha;
     }
 
@@ -62,20 +58,6 @@ public class Carrito {
     }
 
     /**
-     * @return the id_producto
-     */
-    public Producto getId_producto() {
-        return id_producto;
-    }
-
-    /**
-     * @param id_producto the id_producto to set
-     */
-    public void setId_producto(Producto id_producto) {
-        this.id_producto = id_producto;
-    }
-
-    /**
      * @return the fecha
      */
     public Date getFecha() {
@@ -87,6 +69,11 @@ public class Carrito {
      */
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    @Override
+    public String toString() {
+        return "Carrito{" + "id=" + id + ", id_usuario=" + id_usuario + ", fecha=" + fecha + '}';
     }
 
     

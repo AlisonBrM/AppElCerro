@@ -13,25 +13,25 @@ import java.util.List;
  * @author forer
  */
 public class UsuarioController {
-    UsuarioDao destino = new UsuarioDao();
+    UsuarioDao usuario = new UsuarioDao();
     
     public List <Usuario> consultar(){
-        return destino.consultar();
+        return usuario.consultar();
     }
     
     public Usuario consultarId(Usuario usuarioId){
-        return destino.consultarId(usuarioId);
+        return usuario.consultarId(usuarioId);
     }
     
     public int crear (Usuario usuarioCrear){
-        return destino.crear(usuarioCrear);
+        return usuario.crear(usuarioCrear);
     }
     
     public int eliminar(Usuario usuarioEliminar){
-        return destino.eliminar(usuarioEliminar);
+        return usuario.eliminar(usuarioEliminar);
     }
     
     public int actualizar(Usuario usuarioActualizar){
-        return destino.actualizar(usuarioActualizar);
+        return usuario.actualizar(usuarioActualizar);
     }
 }

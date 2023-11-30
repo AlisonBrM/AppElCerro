@@ -6,7 +6,6 @@ package com.mycompany.modelo.dao;
 
 import Red.BaseDeDatos;
 import com.mycompany.modelo.entity.Carrito;
-import com.mycompany.modelo.entity.Producto;
 import com.mycompany.modelo.entity.Usuario;
 import java.sql.Connection;
 import java.sql.Date;
@@ -24,9 +23,9 @@ import javax.swing.JOptionPane;
 public class CarritoDao implements CarritoServices {
     private final String sql = "SELECT * FROM carrito";
     private final String SQL_CONSULTAID =  "SELECT * FROM carrito WHERE id = ?";
-    private final String SQL_INSERTAR = "INSERT INTO carrito(id, id_usuario, id_producto, fecha) VALUES(?,?,?,?)";
+    private final String SQL_INSERTAR = "INSERT INTO carrito(id, id_usuario, fecha) VALUES(?,?,?)";
     private final String SQL_BORRAR = "DELETE FROM carrito WHERE id = ?";
-    private final String SQL_ACTUALIZAR = "UPDATE carrito SET id_usuario = ?, id_producto = ?, fecha = ? WHERE id = ?";
+    private final String SQL_ACTUALIZAR = "UPDATE carrito SET id_usuario = ?, fecha = ? WHERE id = ?";
     List<Carrito> carritos = new ArrayList<>();
     
     @Override
@@ -40,12 +39,13 @@ public class CarritoDao implements CarritoServices {
             
             while(rs.next()){
                 
+                UsuarioDao usuario = new UsuarioDao();
+                
                 int id = rs.getInt("id");
-                Usuario id_usuario = new Usuario(rs.getString("id_usuario"));
-                Producto id_producto = new Producto(rs.getString("id_producto"));
+                Usuario id_usuario = usuario.consultarId(new Usuario(rs.getString("id_usuario")));
                 Date fecha = rs.getDate("fecha");
                 
-                Carrito carrito = new Carrito(id, id_usuario,id_producto,fecha);
+                Carrito carrito = new Carrito(id, id_usuario,fecha);
                 
                 carritos.add(carrito);
             }
@@ -69,13 +69,14 @@ public class CarritoDao implements CarritoServices {
             ResultSet rs = stm.executeQuery();
             
             rs.absolute(1);
-            
+                
+                UsuarioDao usuario = new UsuarioDao();
+                
                 int id = rs.getInt("id");
-                Usuario id_usuario = new Usuario(rs.getString("id_usuario"));
-                Producto id_producto = new Producto(rs.getString("id_producto"));
+                Usuario id_usuario = usuario.consultarId(new Usuario(rs.getString("id_usuario")));
                 Date fecha = rs.getDate("fecha");
                 
-                carritoResultado = new Carrito(id, id_usuario,id_producto,fecha);
+                carritoResultado = new Carrito(id, id_usuario,fecha);
                
                 
         }catch (SQLException ex){
@@ -95,9 +96,8 @@ public class CarritoDao implements CarritoServices {
             PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
             stm.setInt(1, carrito.getId());
             stm.setString(2, carrito.getId_usuario().getCedula());
-            stm.setString(3, carrito.getId_producto().getId());
             java.sql.Date fecha = new java.sql.Date(carrito.getFecha().getTime());
-            stm.setDate(4,  fecha);
+            stm.setDate(3,  fecha);
             
             registros = stm.executeUpdate();
             
@@ -136,10 +136,10 @@ public class CarritoDao implements CarritoServices {
             Connection  connec = db.getConnection();
             PreparedStatement stm = connec.prepareStatement(SQL_ACTUALIZAR);
             
-            stm.setInt(1, carrito.getId());
-            stm.setString(2, carrito.getId_usuario().getCedula());
-            stm.setString(3, carrito.getId_producto().getId());
-            stm.setDate(4, (java.sql.Date) carrito.getFecha());
+            
+            stm.setString(1, carrito.getId_usuario().getCedula());
+            stm.setDate(2, (java.sql.Date) carrito.getFecha());
+            stm.setInt(3, carrito.getId());
             
             registros = stm.executeUpdate();
             

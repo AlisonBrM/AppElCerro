@@ -4,7 +4,6 @@
  */
 package com.mycompany.modelo.dao;
 import com.mycompany.modelo.entity.Carrito;
-import com.mycompany.modelo.entity.Producto;
 import com.mycompany.modelo.entity.Usuario;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,11 +17,11 @@ import java.util.Date;
 public class TestCarritoDao {
     public static void main(String[] args) throws ParseException {
         CarritoDao car = new CarritoDao();
-        Usuario usuario = new Usuario("1");
-        Producto producto = new Producto("1");
+        Usuario usuario = new Usuario("2");
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
         Date fecha = formato.parse("2323-12-11");
         
-        int r = car.crear(new Carrito(1, usuario, producto, fecha));
+        int r = car.crear(new Carrito(2, usuario, fecha));
+        System.out.println(r);
     }
 }
