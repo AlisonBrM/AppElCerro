@@ -9,8 +9,7 @@ package com.mycompany.elcerro.resources;
  * @author Alison Martinez
  */
 import Controller.CarritoController;
-
-import com.mycompany.modelo.entity.Producto;
+import com.mycompany.modelo.entity.Carrito;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -35,16 +34,61 @@ public class CarriroResources {
     return Response.ok().entity("Service online").build();
     }
     
-  /*@GET
-    @Path("/productos/")
+  @GET
+    @Path("/carrito/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDestinos(){
-        List<Producto> productos = new ArrayList();
-        productos = productoController.consultar();
+    public Response getCarrito(){
+        List<Carrito> carritos = new ArrayList();
+        carritos = carritoController.consultar();
         return Response 
                 .status(200)
                 .header("Access-Control-Allow-Origin", "*")
-                .entity(productos)
+                .entity(carritos)
                 .build();
-    }  */
+    }
+    
+    @GET
+    @Path("/carrito/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCarritoId(@PathParam("id") int id){
+        Carrito carritos = new Carrito(id);
+        Carrito carritoR = carritoController.consultarId(carritos);
+        return Response 
+                .status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .entity(carritoR)
+                .build();
+    }
+    
+    @POST
+    @Path("/carrito/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response crear(Carrito carrito){
+        try{
+            carritoController.crear(carrito);
+            return Response.status(Response.Status.CREATED).entity(carrito).build();
+        }
+        catch(Exception ex){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @DELETE
+    @Path("/productos/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response borrarCarrito(@PathParam("id") int id){
+        Carrito carritos = new Carrito(id);
+        int i = carritoController.eliminar(carritos);
+        if (i == 0){
+            return Response 
+                    .status(Response.Status.BAD_REQUEST)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .entity("Productos not found")
+                    .build();
+        }
+        else{
+            return Response.ok("Correcto").build();
+        }
+    }
 }
