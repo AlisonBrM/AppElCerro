@@ -3,8 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.elcerro.resources;
-
-import Controller.ProductoController;
+import Controller.DetalleXPromocionController;
+import Controller.DetallesController;
+import com.mycompany.modelo.entity.Carrito;
+import com.mycompany.modelo.entity.DetalleXPromocion;
+import com.mycompany.modelo.entity.Detalles;
 import com.mycompany.modelo.entity.Producto;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -17,15 +20,14 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  *
- * @author forer
+ * @author Alison Martinez
  */
 
-@Path("producto")
-public class ProductoResources {
-    ProductoController productoController = new ProductoController();
+    @Path("detalles")
+public class DetallesResources {
+    DetallesController detallesController = new DetallesController();
     
     @GET
     @Path("/ping")
@@ -34,61 +36,45 @@ public class ProductoResources {
     }
     
     @GET
-    @Path("/productos/")
+    @Path("/detalles/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDestinos(){
-        List<Producto> productos = new ArrayList();
-        productos = productoController.consultar();
+    public Response getDetalles(){
+        List<Detalles> detalles = new ArrayList();
+        detalles = detallesController.consultar();
         return Response 
                 .status(200)
                 .header("Access-Control-Allow-Origin", "*")
-                .entity(productos)
+                .entity(detalles)
                 .build();
     }
     
     @GET
-    @Path("/productos/{id}")
+    @Path("/detalles/{id_carrito}/{id_carrito}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getproductoId(@PathParam("id") String id){
-        Producto productos = new Producto(id);
-        Producto productosR = productoController.consultarId(productos);
+    public Response getDetallesLlaves(@PathParam("id_carrito") Carrito id_carrito,
+                                      @PathParam("id_producto") Producto id_producto){
+        Detalles detalle = new Detalles(id_carrito, id_producto);
+        List<Detalles> detalleR = detallesController.consultarId(detalle);
         return Response 
                 .status(200)
                 .header("Access-Control-Allow-Origin", "*")
-                .entity(productosR)
+                .entity(detalleR)
                 .build();
     }
     
     @POST
-    @Path("/productos/")
+    @Path("/detalles/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response crear(Producto productos){
+    public Response crear(Detalles detalle){
         try{
-            productoController.crear(productos);
-            return Response.status(Response.Status.CREATED).entity(productos).build();
+            detallesController.crear(detalle);
+            return Response.status(Response.Status.CREATED).entity(detalle).build();
         }
         catch(Exception ex){
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
     
-    @DELETE
-    @Path("/productos/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response borrarProducto(@PathParam("id") String id){
-        Producto productos = new Producto(id);
-        int i = productoController.eliminar(productos);
-        if (i == 0){
-            return Response 
-                    .status(Response.Status.BAD_REQUEST)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .entity("Productos not found")
-                    .build();
-        }
-        else{
-            return Response.ok("Correcto").build();
-        }
-    }
+   
 }
-

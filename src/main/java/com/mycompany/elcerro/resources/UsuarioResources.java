@@ -36,7 +36,7 @@ public class UsuarioResources {
     @GET
     @Path("/usuarios/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDestinos(){
+    public Response getUsuario(){
         List<Usuario> usuario = new ArrayList();
         usuario = usuarioController.consultar();
         return Response 
@@ -76,7 +76,7 @@ public class UsuarioResources {
     @DELETE
     @Path("/usuarios/{cedula}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response borrarDestino(@PathParam("cedula") String cedula){
+    public Response borrarUsuario(@PathParam("cedula") String cedula){
         Usuario usuario = new Usuario(cedula);
         int i = usuarioController.eliminar(usuario);
         if (i == 0){
