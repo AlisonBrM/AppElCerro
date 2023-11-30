@@ -9,10 +9,7 @@ package com.mycompany.modelo.dao;
  * @author Alison Martinez
  */
 import Red.BaseDeDatos;
-import com.mycompany.modelo.entity.Carrito;
-import com.mycompany.modelo.entity.Producto;
 import com.mycompany.modelo.entity.Promociones;
-import com.mycompany.modelo.entity.Usuario;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -26,7 +23,7 @@ import javax.swing.JOptionPane;
 
 public class PromocionesDao implements PromocionesServices {
     
-     private final String sql = "SELECT * FROM promocionesxproducto";
+    private final String sql = "SELECT * FROM promocionesxproducto";
     private final String SQL_CONSULTAID =  "SELECT * FROM promocionesxproducto WHERE id_promocion = ?";
     private final String SQL_INSERTAR = "INSERT INTO promocionesxproducto(id_promocion, nombre, descuento ,fecha_inicio, fecha_fin) VALUES(?,?,?,?,?)";
     private final String SQL_BORRAR = "DELETE FROM promocionesxproducto WHERE id_promocion = ?";
@@ -45,7 +42,6 @@ public class PromocionesDao implements PromocionesServices {
             while(rs.next()){
                 
                 String id_promocion = rs.getString("id_promocion");
-                Producto id_producto = new Producto(rs.getString("id_producto"));
                 String nombre = rs.getString("nombre");
                 Float descuento = rs.getFloat("descuento");
                 Date fecha_inicio = rs.getDate("fecha_inicio");
