@@ -7,18 +7,29 @@ package com.mycompany.modelo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  *
  * @author Alison Martinez
  */
 public class ElCerro {
-    List <Producto> productosDisponibles;
-    List <Promociones> promociones;
+    
 
     public ElCerro() {
-        ArrayList <Promociones> promociones = new ArrayList();
-        ArrayList <Promociones> productosDisponibles = new ArrayList();
     }
     
-    
+    public List<Promociones> mostrarPromociones(Promociones promociones){
+      List<Promociones> promocionesVigentes = new ArrayList<Promociones>();
+      return promocionesVigentes;
+    }
+    public Producto buscarProducto(String nombre){
+        Producto producto = new Producto();
+        if(producto.getNombre().equals(nombre)){
+            return producto;
+        }
+        return null;
+    }
+    public boolean compraRealizada(Carrito carrito){
+        return true;
+    }
 }
