@@ -14,7 +14,6 @@ import java.util.Date;
  */
 public class Promociones {
     private String id_promocion;
-    private Producto id_producto;
     private String nombre;
     private float descuento;
     private Date fecha_inicio;
@@ -29,9 +28,8 @@ public class Promociones {
         this.id_promocion = id_promocion;
     }
 
-    public Promociones(String id_promocion, Producto id_producto, String nombre, float descuento, Date fecha_inicio, Date fecha_fin) {
+    public Promociones(String id_promocion, String nombre, float descuento, Date fecha_inicio, Date fecha_fin) {
         this.id_promocion = id_promocion;
-        this.id_producto = id_producto;
         this.nombre = nombre;
         this.descuento = descuento;
         this.fecha_inicio = fecha_inicio;
@@ -55,16 +53,7 @@ public class Promociones {
     /**
      * @return the id_producto
      */
-    public Producto getId_producto() {
-        return id_producto;
-    }
-
-    /**
-     * @param id_producto the id_producto to set
-     */
-    public void setId_producto(Producto id_producto) {
-        this.id_producto = id_producto;
-    }
+   
 
     /**
      * @return the nombre

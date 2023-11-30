@@ -28,9 +28,9 @@ public class PromocionesDao implements PromocionesServices {
     
      private final String sql = "SELECT * FROM promocionesxproducto";
     private final String SQL_CONSULTAID =  "SELECT * FROM promocionesxproducto WHERE id_promocion = ?";
-    private final String SQL_INSERTAR = "INSERT INTO promocionesxproducto(id_promocion, id_producto, nombre, descuento ,fecha_inicio, fecha_fin) VALUES(?,?,?,?,?,?)";
+    private final String SQL_INSERTAR = "INSERT INTO promocionesxproducto(id_promocion, nombre, descuento ,fecha_inicio, fecha_fin) VALUES(?,?,?,?,?)";
     private final String SQL_BORRAR = "DELETE FROM promocionesxproducto WHERE id_promocion = ?";
-    private final String SQL_ACTUALIZAR = "UPDATE promocionesxproducto SET id_producto = ?, nombre = ?, descuento = ?, fecha_inicio = ?, fecha_fin = ? WHERE id_promocion = ?";
+    private final String SQL_ACTUALIZAR = "UPDATE promocionesxproducto SET nombre = ?, descuento = ?, fecha_inicio = ?, fecha_fin = ? WHERE id_promocion = ?";
     List<Promociones> promociones = new ArrayList<>();
     
     @Override
@@ -51,7 +51,7 @@ public class PromocionesDao implements PromocionesServices {
                 Date fecha_inicio = rs.getDate("fecha_inicio");
                 Date fecha_fin = rs.getDate("fecha_fin");
                 
-                Promociones promocion = new Promociones(id_promocion, id_producto, nombre, descuento, fecha_inicio, fecha_fin);
+                Promociones promocion = new Promociones(id_promocion, nombre, descuento, fecha_inicio, fecha_fin);
                
                 
                 promociones.add(promocion);
@@ -78,13 +78,12 @@ public class PromocionesDao implements PromocionesServices {
             rs.absolute(1);
             
                 String id_promocion = rs.getString("id_promocion");
-                Producto id_producto = new Producto(rs.getString("id_producto"));
                 String nombre = rs.getString("nombre");
                 Float descuento = rs.getFloat("descuento");
                 Date fecha_inicio = rs.getDate("fecha_inicio");
                 Date fecha_fin = rs.getDate("fecha_fin");
                 
-                promocionResultado = new Promociones(id_promocion, id_producto, nombre, descuento, fecha_inicio, fecha_fin);
+                promocionResultado = new Promociones(id_promocion, nombre, descuento, fecha_inicio, fecha_fin);
                
                 
         }catch (SQLException ex){
@@ -103,13 +102,13 @@ public class PromocionesDao implements PromocionesServices {
             
             PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
             stm.setString(1, promocion.getId_promocion());
-            stm.setString(2, promocion.getId_producto().getId());
-            stm.setString(3, promocion.getNombre());
-            stm.setFloat(4, promocion.getDescuento());
+            
+            stm.setString(2, promocion.getNombre());
+            stm.setFloat(3, promocion.getDescuento());
             java.sql.Date fecha_inicio = new java.sql.Date(promocion.getFecha_inicio().getTime());
             java.sql.Date fecha_fin = new java.sql.Date(promocion.getFecha_fin().getTime());
-            stm.setDate(5,  fecha_inicio);
-            stm.setDate(6,  fecha_fin);
+            stm.setDate(4,  fecha_inicio);
+            stm.setDate(5,  fecha_fin);
             registros = stm.executeUpdate();
             
         }catch(SQLException ex){
@@ -147,15 +146,13 @@ public class PromocionesDao implements PromocionesServices {
             Connection  connec = db.getConnection();
             PreparedStatement stm = connec.prepareStatement(SQL_ACTUALIZAR);
             
-            stm.setString(1, promocion.getId_promocion());
-            stm.setString(2, promocion.getId_producto().getId());
-            stm.setString(3, promocion.getNombre());
-            stm.setFloat(4, promocion.getDescuento());
+            stm.setString(1, promocion.getNombre());
+            stm.setFloat(2, promocion.getDescuento());
             java.sql.Date fecha_inicio = new java.sql.Date(promocion.getFecha_inicio().getTime());
             java.sql.Date fecha_fin = new java.sql.Date(promocion.getFecha_fin().getTime());
-            stm.setDate(5,  fecha_inicio);
-            stm.setDate(6,  fecha_fin);
-            
+            stm.setDate(3,  fecha_inicio);
+            stm.setDate(4,  fecha_fin);
+            stm.setString(5, promocion.getId_promocion());
             registros = stm.executeUpdate();
             
         }catch(SQLException ex){

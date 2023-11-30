@@ -18,10 +18,9 @@ import java.util.Date;
 public class TestPromocionesDao {
     public static void main(String[] args) throws ParseException {
         PromocionesDao promo = new PromocionesDao();
-        Producto producto = new Producto("1");
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
         Date fecha_inicio = formato.parse("2023-12-1");
         Date fecha_fin = formato.parse("2023-12-27");
-        promo.crear(new Promociones("1112233",producto , "25% descuento mes de Diciembre", 25 , fecha_inicio, fecha_fin));
+        promo.crear(new Promociones("1112233", "15% descuento en limpieza", 25 , fecha_inicio, fecha_fin));
     }
 }
