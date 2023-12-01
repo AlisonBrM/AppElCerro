@@ -76,7 +76,9 @@ public class Carrito {
         return "Carrito{" + "id=" + id + ", id_usuario=" + id_usuario + ", fecha=" + fecha + '}';
     }
 
-    
+    public static Carrito valueOf(String id) {
+        return new Carrito(Integer.parseInt(id));
+    }
 
     
     
