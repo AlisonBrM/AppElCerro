@@ -6,14 +6,15 @@ package com.mycompany.modelo.dao;
 
 import com.mycompany.modelo.entity.Detalles;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author forer
  */
 public interface DetallesServices {
-    public List<Detalles> consultar();
-    public List<Detalles> consultarId(Detalles detalles);
+     public List<Map<String, Object>> consultar();
+    public List<Map<String, Object>> consultarId(Detalles detalles);
     public int crear(Detalles detalles);
     //public int eliminar(Detalles detalles);
     public int restarProducto(Detalles detalles);

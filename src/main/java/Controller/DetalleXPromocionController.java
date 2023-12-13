@@ -8,6 +8,7 @@ package Controller;
 import com.mycompany.modelo.dao.DetalleXPromocionDao;
 import com.mycompany.modelo.entity.DetalleXPromocion;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -16,11 +17,11 @@ import java.util.List;
 public class DetalleXPromocionController {
     DetalleXPromocionDao detalles = new DetalleXPromocionDao();
      
-    public List <DetalleXPromocion> consultar(){
+    public List<Map<String, Object>> consultar(){
         return detalles.consultar();
     }
     
-    public  List <DetalleXPromocion> consultarId(DetalleXPromocion detalle){
+    public List<Map<String, Object>> consultarId(DetalleXPromocion detalle){
         return detalles.consultarId(detalle);
     }
     

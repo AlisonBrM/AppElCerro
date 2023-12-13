@@ -14,7 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -23,48 +25,54 @@ import javax.swing.JOptionPane;
  */
 public class DetallesDao implements DetallesServices {
 
-    private final String sql = "SELECT * FROM detalle";
-    private final String SQL_CONSULTAID = "SELECT * FROM detalle WHERE id_carrito = ?";
+    private final String sql = "SELECT c.id AS id_carrito, c.fecha, u.nombre AS nombre_usuario, p.nombre AS nombre_producto, p.precio, d.cantidad "
+            + "FROM detalle d "
+            + "JOIN carrito c ON d.id_carrito = c.id "
+            + "JOIN usuario u ON c.id_usuario = u.cedula "
+            + "JOIN producto p ON d.id_producto = p.id";
+    private final String SQL_CONSULTAID = "SELECT c.id AS id_carrito, c.fecha, u.nombre AS nombre_usuario, p.nombre AS nombre_producto, p.precio, d.cantidad "
+            + "FROM detalle d "
+            + "JOIN carrito c ON d.id_carrito = c.id "
+            + "JOIN usuario u ON c.id_usuario = u.cedula "
+            + "JOIN producto p ON d.id_producto = p.id WHERE id_carrito = ?";
     private final String SQL_BUSCAR_PRODUCTO = "SELECT * FROM detalle WHERE id_producto = ?";
     private final String SQL_INSERTAR = "INSERT INTO detalle(id_carrito, id_producto, cantidad) VALUES(?,?,?)";
     private final String SQL_BORRAR_PRODUCTO = "UPDATE detalle SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ?";
     private final String SQL_AGREGAR_PORDUCTO = "UPDATE detalle SET cantidad = cantidad + 1 WHERE id_carrito = ? AND id_producto = ?";
-    List<Detalles> detalles = new ArrayList<>();
+    List<Map<String, Object>> detalles = new ArrayList<>();
 
     @Override
-    public List<Detalles> consultar() {
+    public List<Map<String, Object>> consultar() {
 
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             Connection connec = db.getConnection();
             PreparedStatement stm = connec.prepareStatement(sql);
+
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
+                Map<String, Object> detalleMap = new HashMap<>();
 
-                CarritoDao carrito = new CarritoDao();
-                ProductosDao producto = new ProductosDao();
+                detalleMap.put("id_carrito", rs.getInt("id_carrito"));
+                detalleMap.put("fecha", rs.getString("fecha"));
+                detalleMap.put("nombre_usuario", rs.getString("nombre_usuario"));
+                detalleMap.put("nombre_producto", rs.getString("nombre_producto"));
+                detalleMap.put("precio", rs.getDouble("precio"));
+                detalleMap.put("cantidad", rs.getInt("cantidad"));
 
-                Carrito id_carrito = carrito.consultarId(new Carrito(rs.getInt("id_carrito")));
-                Producto id_producto = producto.consultarId(new Producto(rs.getString("id_producto")));
-                int cantidad = rs.getInt("cantidad");
-
-                Detalles detalle = new Detalles(id_carrito, id_producto, cantidad);
-
-                detalles.add(detalle);
+                detalles.add(detalleMap);
             }
-
-            //utilixzar la conexion
-        } catch (SQLException ex) {
-            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Error al obtener la instancia de la base de datos: " + e.getMessage());
         }
+
         return detalles;
     }
 
     @Override
-    public List<Detalles> consultarId(Detalles detalles) {
-        List<Detalles> detallesList = new ArrayList<>();
+    public List<Map<String, Object>> consultarId(Detalles detalles) {
+        List<Map<String, Object>> detallesList = new ArrayList<>();
 
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
@@ -74,15 +82,16 @@ public class DetallesDao implements DetallesServices {
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
-                CarritoDao carritoDao = new CarritoDao();
-                ProductosDao productoDao = new ProductosDao();
+                Map<String, Object> detalleMap = new HashMap<>();
 
-                Carrito id_carrito = carritoDao.consultarId(new Carrito(rs.getInt("id_carrito")));
-                Producto id_producto = productoDao.consultarId(new Producto(rs.getString("id_producto")));
-                int cantidad = rs.getInt("cantidad");
+                detalleMap.put("id_carrito", rs.getInt("id_carrito"));
+                detalleMap.put("fecha", rs.getString("fecha"));
+                detalleMap.put("nombre_usuario", rs.getString("nombre_usuario"));
+                detalleMap.put("nombre_producto", rs.getString("nombre_producto"));
+                detalleMap.put("precio", rs.getDouble("precio"));
+                detalleMap.put("cantidad", rs.getInt("cantidad"));
 
-                Detalles detallesL = new Detalles(id_carrito, id_producto, cantidad);
-                detallesList.add(detallesL);
+                detallesList.add(detalleMap);
             }
 
         } catch (SQLException ex) {

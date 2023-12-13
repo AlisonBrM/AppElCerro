@@ -17,6 +17,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -38,7 +39,7 @@ public class DetallesResources {
     @Path("/detalles/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDetalles() {
-        List<Detalles> detalles = new ArrayList();
+        List<Map<String, Object>> detalles = new ArrayList();
         detalles = detallesController.consultar();
         return Response
                 .status(200)
@@ -52,7 +53,7 @@ public class DetallesResources {
 @Path("/detalles/{id_carrito}")
 @Produces(MediaType.APPLICATION_JSON)
     public Response getDetallesLlaves(@PathParam("id_carrito") Carrito id_carrito) {
-        List<Detalles> detallesR = new ArrayList();
+        List<Map<String, Object>> detallesR = new ArrayList();
         Detalles detalles = new Detalles(id_carrito);
         detallesR = detallesController.consultarId(detalles);
 

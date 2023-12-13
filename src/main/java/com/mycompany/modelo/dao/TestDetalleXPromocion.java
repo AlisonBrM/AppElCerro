@@ -20,7 +20,8 @@ public class TestDetalleXPromocion {
         
         int r = 0;
         
-        r = dp.crear(new DetalleXPromocion(po, p));
+        //r = dp.crear(new DetalleXPromocion(po, p));
+        System.out.println(dp.consultarId(new DetalleXPromocion(p)));
         System.out.println(r);
     }
 }

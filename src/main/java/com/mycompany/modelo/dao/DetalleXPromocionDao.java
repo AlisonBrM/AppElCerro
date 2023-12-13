@@ -14,7 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,47 +24,56 @@ import javax.swing.JOptionPane;
  * @author forer
  */
 public class DetalleXPromocionDao implements DetalleXPromocionServices {
-    private final String sql = "SELECT * FROM detallexpromo";
-    private final String SQL_CONSULTAID =  "SELECT * FROM detallexpromo WHERE id_promocion = ?";
+
+    private final String sql = "SELECT dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin "
+            + "FROM detallexpromo dp "
+            + "JOIN producto pr ON dp.id_producto = pr.id "
+            + "JOIN promocionesxproducto p ON dp.id_promocion = p.id_promocion";
+    private final String SQL_CONSULTAID = "SELECT dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin "
+            + "FROM detallexpromo dp "
+            + "JOIN producto pr ON dp.id_producto = pr.id "
+            + "JOIN promocionesxproducto p ON dp.id_promocion = p.id_promocion "
+            + "WHERE dp.id_promocion = ?";
     private final String SQL_BUSCAR_PRODUCTO = "SELECT * FROM detallexpromo WHERE id_producto = ?";
     private final String SQL_INSERTAR = "INSERT INTO detallexpromo(id_producto,id_promocion) VALUES(?,?)";
     private final String SQL_ACTUALIZAR = "UPDATE detallexpromo SET id_producto = ? WHERE id_promocion = ?";
-    List<DetalleXPromocion> promociones = new ArrayList<>();
-    
-    @Override
-    public List<DetalleXPromocion> consultar() {
-        
-       try {
-           BaseDeDatos db = BaseDeDatos.getInstance();
-           Connection  connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(sql);
-            ResultSet rs = stm.executeQuery();
-            
-            while(rs.next()){
-                
-                ProductosDao producto = new ProductosDao();
-                PromocionesDao promocion = new PromocionesDao();
-                
-                Producto id_producto = producto.consultarId(new Producto(rs.getString("id_producto")));
-                Promociones id_promocion = promocion.consultarId(new Promociones (rs.getString("id_promocion")));
+    List<Map<String, Object>> promociones = new ArrayList<>();
 
-                DetalleXPromocion detalle = new DetalleXPromocion(id_producto, id_promocion);
-               
-                
-                promociones.add(detalle);
+    @Override
+    public List<Map<String, Object>> consultar() {
+
+        try {
+
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
+            PreparedStatement stm = connec.prepareStatement(sql);
+
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> detalleMap = new HashMap<>();
+
+                detalleMap.put("id_promocion", rs.getString("id_promocion"));
+                detalleMap.put("nombre_promocion", rs.getString("nombre_promocion"));
+                detalleMap.put("nombre_producto", rs.getString("nombre_producto"));
+                detalleMap.put("descuento", rs.getInt("descuento"));
+                detalleMap.put("fecha_inicio", rs.getString("fecha_inicio"));
+                detalleMap.put("fecha_fin", rs.getString("fecha_fin"));
+
+                promociones.add(detalleMap);
             }
-            
-            //utilixzar la conexion
-        }catch (SQLException ex){
-            System.out.println("Mensaje: "+ Arrays.toString(ex.getStackTrace()));
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-       return promociones;
+
+        return promociones;
     }
-    
+
     @Override
-    public List<DetalleXPromocion> consultarId(DetalleXPromocion detallesX) {
-        List<DetalleXPromocion> detallesList = new ArrayList<>();
+    public List<Map<String, Object>> consultarId(DetalleXPromocion detallesX) {
+        List<Map<String, Object>> detallesList = new ArrayList<>();
 
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
@@ -72,16 +83,16 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
-                ProductosDao producto = new ProductosDao();
-                PromocionesDao promocion = new PromocionesDao();
-                
-                Producto id_producto = producto.consultarId(new Producto(rs.getString("id_producto")));
-                Promociones id_promocion = promocion.consultarId(new Promociones (rs.getString("id_promocion")));
+                Map<String, Object> detalleMap = new HashMap<>();
 
-                DetalleXPromocion detalle = new DetalleXPromocion(id_producto, id_promocion);
-               
-                
-                detallesList.add(detalle);
+                detalleMap.put("id_promocion", rs.getString("id_promocion"));
+                detalleMap.put("nombre_promocion", rs.getString("nombre_promocion"));
+                detalleMap.put("nombre_producto", rs.getString("nombre_producto"));
+                detalleMap.put("descuento", rs.getInt("descuento"));
+                detalleMap.put("fecha_inicio", rs.getString("fecha_inicio"));
+                detalleMap.put("fecha_fin", rs.getString("fecha_fin"));
+
+                detallesList.add(detalleMap);
             }
 
         } catch (SQLException ex) {
@@ -90,52 +101,53 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
         }
         return detallesList;
     }
-    
+
     @Override
     public int crear(DetalleXPromocion detalleX) {
         int registros = 0;
-        try{
-            if(existeProducto(detalleX.getId_producto().getId())){
+        try {
+            if (existeProducto(detalleX.getId_producto().getId())) {
                 return 0;
             } else {
                 BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection  connec = db.getConnection();
-            
-            PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
-            stm.setString(2, detalleX.getId_promocion().getId_promocion());
-            stm.setString(1, detalleX.getId_producto().getId());
-            
-            registros = stm.executeUpdate();
+                Connection connec = db.getConnection();
+
+                PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
+                stm.setString(2, detalleX.getId_promocion().getId_promocion());
+                stm.setString(1, detalleX.getId_producto().getId());
+
+                registros = stm.executeUpdate();
             }
-            
-        }catch(SQLException ex){
-            System.out.println("Mensaje: "+ Arrays.toString(ex.getStackTrace()));
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
-         
+
         }
         return registros;
     }
-    
+
     @Override
     public int actualizar(DetalleXPromocion promocion) {
         int registros = 0;
-        try{
+        try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection  connec = db.getConnection();
+            Connection connec = db.getConnection();
             PreparedStatement stm = connec.prepareStatement(SQL_ACTUALIZAR);
-            
+
             stm.setString(1, promocion.getId_producto().getId());
             stm.setString(2, promocion.getId_promocion().getId_promocion());
             registros = stm.executeUpdate();
-            
-        }catch(SQLException ex){
-            System.out.println("Mensaje: "+ Arrays.toString(ex.getStackTrace()));
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
-         
+
         }
         return registros;
     }
-     public boolean existeProducto(String idProducto) {
+
+    public boolean existeProducto(String idProducto) {
         boolean existe = false;
 
         try {
@@ -153,5 +165,5 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
         }
 
         return existe;
-     }
+    }
 }

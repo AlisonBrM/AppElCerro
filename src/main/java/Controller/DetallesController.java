@@ -8,6 +8,7 @@ import com.mycompany.modelo.dao.DetallesDao;
 import com.mycompany.modelo.entity.Carrito;
 import com.mycompany.modelo.entity.Detalles;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -18,11 +19,11 @@ import java.util.List;
 public class DetallesController {
      DetallesDao detalles = new DetallesDao();
      Carrito carrito = new Carrito();
-    public List <Detalles> consultar(){
+    public List<Map<String, Object>> consultar(){
         return detalles.consultar();
     }
     
-    public  List <Detalles> consultarId(Detalles detalle){
+    public List<Map<String, Object>> consultarId(Detalles detalle){
         return detalles.consultarId(detalle);
     }
     
