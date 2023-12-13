@@ -21,7 +21,7 @@ public class TestProductoDao {
         //r = p.actualizar(new Producto("1","Pollo", "Comida" , 15000 , "...",20));
         
         System.out.println("Cantidad: " + r);
-        System.out.println(p.consultarId(new Producto("0")));
-        System.out.println("" + p.consultar());
+        //System.out.println(p.consultarId(new Producto("0")));
+        //System.out.println("" + p.consultar());
     }
 }

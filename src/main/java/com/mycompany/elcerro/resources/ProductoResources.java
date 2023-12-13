@@ -59,6 +59,19 @@ public class ProductoResources {
                 .build();
     }
     
+    @GET
+    @Path("/productostipo/{tipo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getproductoTipo(@PathParam("tipo") String tipo){
+        List<Producto> productos = new ArrayList();
+        productos = productoController.consultaTipo(tipo);
+        return Response 
+                .status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .entity(productos)
+                .build();
+    }
+    
     @POST
     @Path("/productos/")
     @Produces(MediaType.APPLICATION_JSON)
