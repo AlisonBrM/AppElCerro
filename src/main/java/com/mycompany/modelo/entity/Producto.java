@@ -16,14 +16,16 @@ public class Producto {
     private float precio;
     private String descripcion;
     private int cantidad;
+    private String img;
 
-    public Producto(String id, String nombre, String tipo, float precio, String descripcion, int cantidad) {
+    public Producto(String id, String nombre, String tipo, float precio, String descripcion, int cantidad, String img) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
         this.precio = precio;
         this.descripcion = descripcion;
         this.cantidad = cantidad;
+        this.img = img;
     }
 
     public Producto(String id) {
@@ -120,6 +122,20 @@ public class Producto {
     @Override
     public String toString() {
         return "Producto{" + "id=" + id + ", nombre=" + nombre + ", tipo=" + tipo + ", precio=" + precio + ", descripcion=" + descripcion + ", cantidad=" + cantidad + '}';
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
     }
    
     

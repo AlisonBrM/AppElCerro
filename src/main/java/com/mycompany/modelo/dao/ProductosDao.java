@@ -22,9 +22,9 @@ import javax.swing.JOptionPane;
 public class ProductosDao implements ProductosServices {
     private final String sql = "SELECT * FROM producto";
     private final String SQL_CONSULTAID =  "SELECT * FROM producto WHERE id = ?";
-    private final String SQL_INSERTAR = "INSERT INTO producto(id,nombre,tipo,precio,descripcion,cantidad) VALUES(?,?,?,?,?,?)";
+    private final String SQL_INSERTAR = "INSERT INTO producto(id,nombre,tipo,precio,descripcion,cantidad,img) VALUES(?,?,?,?,?,?,?)";
     private final String SQL_BORRAR = "DELETE FROM producto WHERE id = ?";
-    private final String SQL_ACTUALIZAR = "UPDATE producto SET nombre = ?, tipo = ?, precio = ?, descripcion = ?, cantidad = ? WHERE id = ?";
+    private final String SQL_ACTUALIZAR = "UPDATE producto SET nombre = ?, tipo = ?, precio = ?, descripcion = ?, cantidad = ?, img = ? WHERE id = ?";
     List<Producto> destinos = new ArrayList<>();
 
     @Override
@@ -43,7 +43,8 @@ public class ProductosDao implements ProductosServices {
                 float precio =  rs.getFloat("precio");
                 String descripcion =  rs.getString("descripcion");
                 int cantidad = rs.getInt("cantidad");
-                Producto producto = new Producto(id,nombre,tipo,precio,descripcion,cantidad);
+                String img = rs.getString("img");
+                Producto producto = new Producto(id,nombre,tipo,precio,descripcion,cantidad, img);
                 destinos.add(producto);
             }
             
@@ -73,7 +74,8 @@ public class ProductosDao implements ProductosServices {
                 float precio =  rs.getFloat("precio");
                 String descripcion =  rs.getString("descripcion");
                 int cantidad = rs.getInt("cantidad");
-                productoResultado = new Producto(id,nombre,tipo,precio,descripcion,cantidad);
+                String img = rs.getString("img");
+                productoResultado = new Producto(id,nombre,tipo,precio,descripcion,cantidad, img);
             
                 
         }catch (SQLException ex){
@@ -97,6 +99,7 @@ public class ProductosDao implements ProductosServices {
             stm.setFloat(4, producto.getPrecio());
             stm.setString(5, producto.getDescripcion());
             stm.setInt(6, producto.getCantidad());
+            stm.setString(7, producto.getImg());
             registros = stm.executeUpdate();
             
         }catch(SQLException ex){
@@ -138,7 +141,8 @@ public class ProductosDao implements ProductosServices {
             stm.setFloat(3, producto.getPrecio());
             stm.setString(4, producto.getDescripcion());       
             stm.setInt(5, producto.getCantidad());
-            stm.setString(6, producto.getId());
+            stm.setString(6, producto.getImg());
+            stm.setString(7, producto.getId());
             registros = stm.executeUpdate();
             
         }catch(SQLException ex){
