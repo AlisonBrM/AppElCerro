@@ -90,5 +90,22 @@ public class DetalleXPromocionResources {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
+    
+    @POST
+    @Path("/detallexpromo/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response existeProducto(String IdProducto) {
+        try {
+            boolean existe = detalleXPromocionController.existeProducto(IdProducto);
+            if(existe){
+                return Response.status(Response.Status.OK).entity("Hay producto disponible").build();
+        } else {
+            return Response.status(Response.Status.NOT_MODIFIED).entity("Este producto se ha agotado").build();
+            }
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
 
 }
