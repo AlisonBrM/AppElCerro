@@ -74,6 +74,20 @@ public class CarriroResources {
         }
     }
     
+    @POST
+    @Path("/carritos/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response actualizar(Carrito carrito){
+        try{
+            carritoController.actualizar(carrito);
+            return Response.status(Response.Status.CREATED).entity(carrito).build();
+        }
+        catch(Exception ex){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
     @DELETE
     @Path("/carritos/{id}")
     @Produces(MediaType.APPLICATION_JSON)

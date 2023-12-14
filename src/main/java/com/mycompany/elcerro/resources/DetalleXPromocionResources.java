@@ -77,5 +77,18 @@ public class DetalleXPromocionResources {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
+    
+    @POST
+    @Path("/detallexpromo/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response actualizar(DetalleXPromocion detalleXPromocion) {
+        try {
+            detalleXPromocionController.actualizar(detalleXPromocion);
+            return Response.status(Response.Status.CREATED).entity(detalleXPromocion).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
 
 }

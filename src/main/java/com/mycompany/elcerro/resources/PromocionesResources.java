@@ -73,6 +73,20 @@ public class PromocionesResources {
         }
     }
     
+    @POST
+    @Path("/promocionesxproducto/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response actualizar(Promociones promo){
+        try{
+            promoController.actualizar(promo);
+            return Response.status(Response.Status.CREATED).entity(promo).build();
+        }
+        catch(Exception ex){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
     @DELETE
     @Path("/promocionesxproducto/{id_promocion}")
     @Produces(MediaType.APPLICATION_JSON)

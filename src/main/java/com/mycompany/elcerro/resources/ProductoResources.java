@@ -86,6 +86,20 @@ public class ProductoResources {
         }
     }
     
+    @POST
+    @Path("/productos/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response actualizar(Producto productos){
+        try{
+            productoController.actualizar(productos);
+            return Response.status(Response.Status.CREATED).entity(productos).build();
+        }
+        catch(Exception ex){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
     @DELETE
     @Path("/productos/{id}")
     @Produces(MediaType.APPLICATION_JSON)
