@@ -35,7 +35,7 @@ public class CarriroResources {
     }
     
   @GET
-    @Path("/carrito/")
+    @Path("/carritos/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCarrito(){
         List<Carrito> carritos = new ArrayList();
@@ -48,7 +48,7 @@ public class CarriroResources {
     }
     
     @GET
-    @Path("/carrito/{id}")
+    @Path("/carritos/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCarritoId(@PathParam("id") int id){
         Carrito carritos = new Carrito(id);
@@ -61,7 +61,7 @@ public class CarriroResources {
     }
     
     @POST
-    @Path("/carrito/")
+    @Path("/carritos/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response crear(Carrito carrito){
@@ -75,7 +75,7 @@ public class CarriroResources {
     }
     
     @DELETE
-    @Path("/productos/{id}")
+    @Path("/carritos/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response borrarCarrito(@PathParam("id") int id){
         Carrito carritos = new Carrito(id);

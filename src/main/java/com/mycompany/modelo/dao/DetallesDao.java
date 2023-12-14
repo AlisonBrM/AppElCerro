@@ -35,7 +35,7 @@ public class DetallesDao implements DetallesServices {
             + "JOIN carrito c ON d.id_carrito = c.id "
             + "JOIN usuario u ON c.id_usuario = u.cedula "
             + "JOIN producto p ON d.id_producto = p.id WHERE id_carrito = ?";
-    private final String SQL_BUSCAR_PRODUCTO = "SELECT * FROM detalle WHERE id_producto = ?";
+    private final String SQL_BUSCAR_PRODUCTO = "SELECT * FROM detalle WHERE id_carrito IN (SELECT id FROM carrito WHERE id_usuario = ?) AND id_producto = ?";
     private final String SQL_INSERTAR = "INSERT INTO detalle(id_carrito, id_producto, cantidad) VALUES(?,?,?)";
     private final String SQL_BORRAR_PRODUCTO = "UPDATE detalle SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ?";
     private final String SQL_AGREGAR_PORDUCTO = "UPDATE detalle SET cantidad = cantidad + 1 WHERE id_carrito = ? AND id_producto = ?";
@@ -106,7 +106,7 @@ public class DetallesDao implements DetallesServices {
     public int crear(Detalles detalles) {
         int registros = 0;
         try {
-            if (existeProducto(detalles.getId_producto().getId())) {
+            if (existeProducto(detalles.getId_carrito().getId(),detalles.getId_producto().getId())) {
                 sumarProducto(detalles);
             } else {
                 BaseDeDatos db = BaseDeDatos.getInstance();
@@ -170,23 +170,26 @@ public class DetallesDao implements DetallesServices {
         return registros;
     }
 
-    public boolean existeProducto(String idProducto) {
-        boolean existe = false;
+    public boolean existeProducto(int idCarrito, String idProducto) {
+    boolean existe = false;
 
-        try {
-            BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_BUSCAR_PRODUCTO);
-            stm.setString(1, idProducto);
-            ResultSet rs = stm.executeQuery();
+    try {
+        BaseDeDatos db = BaseDeDatos.getInstance();
+        try (Connection connec = db.getConnection();
+             PreparedStatement stm = connec.prepareStatement(SQL_BUSCAR_PRODUCTO)) {
 
-            existe = rs.next();
+            stm.setInt(1, idCarrito);
+            stm.setString(2, idProducto);
 
-        } catch (SQLException ex) {
-            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            try (ResultSet rs = stm.executeQuery()) {
+                existe = rs.next();
+            }
         }
-
-        return existe;
+    } catch (SQLException ex) {
+        System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+        JOptionPane.showMessageDialog(null, ex.getMessage());
     }
+
+    return existe;
+}
 }

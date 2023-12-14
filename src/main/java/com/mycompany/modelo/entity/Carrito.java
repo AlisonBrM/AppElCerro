@@ -4,6 +4,8 @@
  */
 package com.mycompany.modelo.entity;
 
+
+import jakarta.json.bind.annotation.JsonbDateFormat;
 import java.util.Date;
 
 /**
@@ -13,6 +15,7 @@ import java.util.Date;
 public class Carrito {
     private int id;
     private Usuario id_usuario;
+    @JsonbDateFormat("yyyy-MM-dd")
     private Date fecha;
 
     

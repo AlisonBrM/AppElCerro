@@ -16,7 +16,7 @@ public class TestProductoDao {
         
         int r = 0;
         
-        //r = p.crear(new Producto("1","Carne", "Comida" , 25000 , "...",20));
+        r = p.crear(new Producto("200","cloro", "Comida" , 25000 , "...",20, "https://i.postimg.cc/cCgv6hwg/1.png"));
         //r = p.eliminar(new Producto("1"));
         //r = p.actualizar(new Producto("1","Pollo", "Comida" , 15000 , "...",20));
         

@@ -8,7 +8,7 @@ import Red.BaseDeDatos;
 import com.mycompany.modelo.entity.Carrito;
 import com.mycompany.modelo.entity.Usuario;
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,7 +43,7 @@ public class CarritoDao implements CarritoServices {
                 
                 int id = rs.getInt("id");
                 Usuario id_usuario = usuario.consultarId(new Usuario(rs.getString("id_usuario")));
-                Date fecha = rs.getDate("fecha");
+                java.sql.Date fecha = rs.getDate("fecha");
                 
                 Carrito carrito = new Carrito(id, id_usuario,fecha);
                 
@@ -74,7 +74,7 @@ public class CarritoDao implements CarritoServices {
                 
                 int id = rs.getInt("id");
                 Usuario id_usuario = usuario.consultarId(new Usuario(rs.getString("id_usuario")));
-                Date fecha = rs.getDate("fecha");
+                java.sql.Date fecha = rs.getDate("fecha");
                 
                 carritoResultado = new Carrito(id, id_usuario,fecha);
                
@@ -89,22 +89,24 @@ public class CarritoDao implements CarritoServices {
     @Override
     public int crear(Carrito carrito) {
         int registros = 0;
-        try{
+        try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection  connec = db.getConnection();
-            
+            Connection connec = db.getConnection();
+
+            Date fechaActual = new Date();
+
+            java.sql.Date fecha = new java.sql.Date(fechaActual.getTime());
+
             PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
             stm.setInt(1, carrito.getId());
             stm.setString(2, carrito.getId_usuario().getCedula());
-            java.sql.Date fecha = new java.sql.Date(carrito.getFecha().getTime());
-            stm.setDate(3,  fecha);
-            
+            stm.setDate(3, fecha);
+
             registros = stm.executeUpdate();
-            
-        }catch(SQLException ex){
-            System.out.println("Mensaje: "+ Arrays.toString(ex.getStackTrace()));
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
-         
         }
         return registros;
     }
