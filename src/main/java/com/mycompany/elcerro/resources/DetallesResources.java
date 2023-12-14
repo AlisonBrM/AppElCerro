@@ -23,7 +23,6 @@ import java.util.Map;
  *
  * @author Alison Martinez
  */
-
 @Path("detalle")
 public class DetallesResources {
 
@@ -48,21 +47,20 @@ public class DetallesResources {
                 .build();
     }
 
-    
     @GET
-@Path("/detalles/{id_carrito}")
-@Produces(MediaType.APPLICATION_JSON)
+    @Path("/detalles/{id_carrito}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getDetallesLlaves(@PathParam("id_carrito") Carrito id_carrito) {
         List<Map<String, Object>> detallesR = new ArrayList();
         Detalles detalles = new Detalles(id_carrito);
         detallesR = detallesController.consultarId(detalles);
 
-    return Response
-            .status(200)
-            .header("Access-Control-Allow-Origin", "*")
-            .entity(detallesR)
-            .build();
-}
+        return Response
+                .status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .entity(detallesR)
+                .build();
+    }
 
     @POST
     @Path("/detalles/")
@@ -74,6 +72,34 @@ public class DetallesResources {
             return Response.status(Response.Status.CREATED).entity(detalle).build();
         } catch (Exception ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("/restarProducto")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response restarProducto(Detalles detalles) {
+        int registros = detallesController.restarProducto(detalles);
+
+        if (registros > 0) {
+            return Response.status(Response.Status.OK).entity("Producto restado exitosamente").build();
+        } else {
+            return Response.status(Response.Status.NOT_MODIFIED).entity("No se realizó ninguna modificación").build();
+        }
+    }
+
+    @POST
+    @Path("/sumarProducto")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response sumarProducto(Detalles detalles) {
+        int registros = detallesController.sumarProducto(detalles);
+
+        if (registros > 0) {
+            return Response.status(Response.Status.OK).entity("Producto sumado exitosamente").build();
+        } else {
+            return Response.status(Response.Status.NOT_MODIFIED).entity("No se realizó ninguna modificación").build();
         }
     }
 

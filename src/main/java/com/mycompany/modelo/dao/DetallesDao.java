@@ -35,7 +35,7 @@ public class DetallesDao implements DetallesServices {
             + "JOIN carrito c ON d.id_carrito = c.id "
             + "JOIN usuario u ON c.id_usuario = u.cedula "
             + "JOIN producto p ON d.id_producto = p.id WHERE id_carrito = ?";
-    private final String SQL_BUSCAR_PRODUCTO = "SELECT * FROM detalle WHERE id_carrito IN (SELECT id FROM carrito WHERE id_usuario = ?) AND id_producto = ?";
+    private final String SQL_BUSCAR_PRODUCTO = "SELECT * FROM detalle WHERE id_carrito = ? AND id_producto = ?";
     private final String SQL_INSERTAR = "INSERT INTO detalle(id_carrito, id_producto, cantidad) VALUES(?,?,?)";
     private final String SQL_BORRAR_PRODUCTO = "UPDATE detalle SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ?";
     private final String SQL_AGREGAR_PORDUCTO = "UPDATE detalle SET cantidad = cantidad + 1 WHERE id_carrito = ? AND id_producto = ?";
