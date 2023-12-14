@@ -73,6 +73,20 @@ public class UsuarioResources {
         }
     }
     
+    @POST
+    @Path("/usuarios/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response actualizar(Usuario usuario){
+        try{
+            usuarioController.actualizar(usuario);
+            return Response.status(Response.Status.CREATED).entity(usuario).build();
+        }
+        catch(Exception ex){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
     @DELETE
     @Path("/usuarios/{cedula}")
     @Produces(MediaType.APPLICATION_JSON)
