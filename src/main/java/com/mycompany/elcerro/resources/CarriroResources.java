@@ -75,7 +75,7 @@ public class CarriroResources {
     }
     
     @POST
-    @Path("/carritos/")
+    @Path("/carritosCambiar/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response actualizar(Carrito carrito){

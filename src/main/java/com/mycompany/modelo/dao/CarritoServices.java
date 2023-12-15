@@ -17,4 +17,6 @@ public interface CarritoServices {
     public int crear(Carrito carrito);
     public int eliminar(Carrito carrito);
     public int actualizar(Carrito carrito);
+    public int activar(Carrito carrito);
+    public int desactivar(Carrito carrito);
 }

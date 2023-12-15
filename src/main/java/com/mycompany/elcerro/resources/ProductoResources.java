@@ -87,7 +87,7 @@ public class ProductoResources {
     }
     
     @POST
-    @Path("/productos/")
+    @Path("/productosCambiar/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response actualizar(Producto productos){

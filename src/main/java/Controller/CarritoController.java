@@ -34,4 +34,12 @@ public class CarritoController {
     public int actualizar(Carrito carritoActualizar){
         return carrito.actualizar(carritoActualizar);
     }
+    
+    public int activar(Carrito carritoActualizar){
+        return carrito.activar(carritoActualizar);
+    }
+    
+    public int desactivar(Carrito carritoActualizar){
+        return carrito.desactivar(carritoActualizar);
+    }
 }

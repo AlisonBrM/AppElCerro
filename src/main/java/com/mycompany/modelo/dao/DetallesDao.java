@@ -39,6 +39,7 @@ public class DetallesDao implements DetallesServices {
     private final String SQL_INSERTAR = "INSERT INTO detalle(id_carrito, id_producto, cantidad) VALUES(?,?,?)";
     private final String SQL_BORRAR_PRODUCTO = "UPDATE detalle SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ?";
     private final String SQL_AGREGAR_PORDUCTO = "UPDATE detalle SET cantidad = cantidad + 1 WHERE id_carrito = ? AND id_producto = ?";
+    private final String SQL_TIENE_PRODUCTOS = "SELECT * FROM detalle WHERE id_carrito = ?";
     List<Map<String, Object>> detalles = new ArrayList<>();
 
     @Override
@@ -106,7 +107,11 @@ public class DetallesDao implements DetallesServices {
     public int crear(Detalles detalles) {
         int registros = 0;
         try {
-            if (existeProducto(detalles.getId_carrito().getId(),detalles.getId_producto().getId())) {
+            if (!tieneProductos(detalles.getId_carrito().getId())) {
+                CarritoDao carrito = new CarritoDao();
+                carrito.activar(new Carrito(detalles.getId_carrito().getId()));
+            }
+            if (existeProducto(detalles.getId_carrito().getId(), detalles.getId_producto().getId())) {
                 sumarProducto(detalles);
             } else {
                 BaseDeDatos db = BaseDeDatos.getInstance();
@@ -141,6 +146,11 @@ public class DetallesDao implements DetallesServices {
 
             registros = stm.executeUpdate();
 
+            if (!tieneProductos(detalles.getId_carrito().getId())) {
+                CarritoDao carrito = new CarritoDao();
+                carrito.desactivar(new Carrito(detalles.getId_carrito().getId()));
+            }
+
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -171,25 +181,51 @@ public class DetallesDao implements DetallesServices {
     }
 
     public boolean existeProducto(int idCarrito, String idProducto) {
-    boolean existe = false;
+        boolean existe = false;
 
-    try {
-        BaseDeDatos db = BaseDeDatos.getInstance();
-        try (Connection connec = db.getConnection();
-             PreparedStatement stm = connec.prepareStatement(SQL_BUSCAR_PRODUCTO)) {
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            try (Connection connec = db.getConnection(); PreparedStatement stm = connec.prepareStatement(SQL_BUSCAR_PRODUCTO)) {
 
-            stm.setInt(1, idCarrito);
-            stm.setString(2, idProducto);
+                stm.setInt(1, idCarrito);
+                stm.setString(2, idProducto);
 
-            try (ResultSet rs = stm.executeQuery()) {
-                existe = rs.next();
+                try (ResultSet rs = stm.executeQuery()) {
+                    existe = rs.next();
+                }
             }
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-    } catch (SQLException ex) {
-        System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
-        JOptionPane.showMessageDialog(null, ex.getMessage());
+
+        return existe;
     }
 
-    return existe;
-}
+    public boolean tieneProductos(int idCarrito) {
+        boolean tieneProductos = false;
+
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
+            PreparedStatement stm = connec.prepareStatement(SQL_TIENE_PRODUCTOS);
+
+            stm.setInt(1, idCarrito);
+
+            try (ResultSet rs = stm.executeQuery()) {
+                int sumaCantidades = 0;
+                while (rs.next()) {
+                    sumaCantidades += rs.getInt("cantidad");
+                }
+
+                tieneProductos = sumaCantidades > 0;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+
+        return tieneProductos;
+    }
+
 }

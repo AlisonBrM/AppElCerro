@@ -74,7 +74,7 @@ public class PromocionesResources {
     }
     
     @POST
-    @Path("/promocionesxproducto/")
+    @Path("/promocionesxproductoCambiar/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response actualizar(Promociones promo){

@@ -74,7 +74,7 @@ public class UsuarioResources {
     }
     
     @POST
-    @Path("/usuarios/")
+    @Path("/usuariosCambiar/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response actualizar(Usuario usuario){

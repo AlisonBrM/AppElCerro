@@ -21,7 +21,7 @@ public class TestCarritoDao {
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
         Date fecha = formato.parse("2323-12-11");
         
-        int r = car.crear(new Carrito(2, usuario, fecha));
+        int r = car.crear(new Carrito(2, usuario));
         System.out.println(r);
     }
 }

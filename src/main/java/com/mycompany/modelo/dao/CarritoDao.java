@@ -16,76 +16,81 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Alison Martinez
  */
 public class CarritoDao implements CarritoServices {
+
     private final String sql = "SELECT * FROM carrito";
-    private final String SQL_CONSULTAID =  "SELECT * FROM carrito WHERE id = ?";
-    private final String SQL_INSERTAR = "INSERT INTO carrito(id, id_usuario, fecha) VALUES(?,?,?)";
+    private final String SQL_CONSULTAID = "SELECT * FROM carrito WHERE id = ?";
+    private final String SQL_INSERTAR = "INSERT INTO carrito(id, id_usuario, fecha, activo) VALUES(?,?,?,?)";
     private final String SQL_BORRAR = "DELETE FROM carrito WHERE id = ?";
-    private final String SQL_ACTUALIZAR = "UPDATE carrito SET id_usuario = ?, fecha = ? WHERE id = ?";
+    private final String SQL_ACTUALIZAR = "UPDATE carrito SET fecha = ?, activo = ? WHERE id = ?";
+    private final String SQL_ACTIVAR = "UPDATE carrito SET fecha = ?, activo = ? WHERE id = ?";
+    private final String SQL_DESACTIVAR = "UPDATE carrito SET fecha = ?, activo = ? WHERE id = ?";
     List<Carrito> carritos = new ArrayList<>();
-    
+
     @Override
     public List<Carrito> consultar() {
-        
-       try {
-           BaseDeDatos db = BaseDeDatos.getInstance();
-           Connection  connec = db.getConnection();
+
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
             PreparedStatement stm = connec.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
-            
-            while(rs.next()){
-                
+
+            while (rs.next()) {
+
                 UsuarioDao usuario = new UsuarioDao();
-                
+
                 int id = rs.getInt("id");
                 Usuario id_usuario = usuario.consultarId(new Usuario(rs.getString("id_usuario")));
                 java.sql.Date fecha = rs.getDate("fecha");
-                
-                Carrito carrito = new Carrito(id, id_usuario,fecha);
-                
+                int activo = rs.getInt("activo");
+
+                Carrito carrito = new Carrito(id, id_usuario, fecha, activo);
+
                 carritos.add(carrito);
             }
-            
+
             //utilixzar la conexion
-        }catch (SQLException ex){
-            System.out.println("Mensaje: "+ Arrays.toString(ex.getStackTrace()));
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-       return carritos;
+        return carritos;
     }
-    
+
     @Override
     public Carrito consultarId(Carrito carrito) {
         Carrito carritoResultado = null;
         try {
-           BaseDeDatos db = BaseDeDatos.getInstance();
-           Connection  connec = db.getConnection();
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
             PreparedStatement stm = connec.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
             stm.setInt(1, carrito.getId());
             ResultSet rs = stm.executeQuery();
-            
+
             rs.absolute(1);
-                
-                UsuarioDao usuario = new UsuarioDao();
-                
-                int id = rs.getInt("id");
-                Usuario id_usuario = usuario.consultarId(new Usuario(rs.getString("id_usuario")));
-                java.sql.Date fecha = rs.getDate("fecha");
-                
-                carritoResultado = new Carrito(id, id_usuario,fecha);
-               
-                
-        }catch (SQLException ex){
-            System.out.println("Mensaje: "+ Arrays.toString(ex.getStackTrace()));
+
+            UsuarioDao usuario = new UsuarioDao();
+
+            int id = rs.getInt("id");
+            Usuario id_usuario = usuario.consultarId(new Usuario(rs.getString("id_usuario")));
+            java.sql.Date fecha = rs.getDate("fecha");
+            int activo = rs.getInt("activo");
+
+            carritoResultado = new Carrito(id, id_usuario, fecha, activo);
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
         return carritoResultado;
-    } 
-    
+    }
+
     @Override
     public int crear(Carrito carrito) {
         int registros = 0;
@@ -93,14 +98,15 @@ public class CarritoDao implements CarritoServices {
             BaseDeDatos db = BaseDeDatos.getInstance();
             Connection connec = db.getConnection();
 
-            Date fechaActual = new Date();
+            long fechaNula = java.sql.Date.valueOf("0001-01-01").getTime();
 
-            java.sql.Date fecha = new java.sql.Date(fechaActual.getTime());
+            java.sql.Date fecha = new java.sql.Date(fechaNula);
 
             PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
             stm.setInt(1, carrito.getId());
             stm.setString(2, carrito.getId_usuario().getCedula());
             stm.setDate(3, fecha);
+            stm.setInt(4, 0);
 
             registros = stm.executeUpdate();
 
@@ -110,47 +116,102 @@ public class CarritoDao implements CarritoServices {
         }
         return registros;
     }
-    
+
     @Override
     public int eliminar(Carrito carrito) {
-       int registros = 0;
-        try{
+        int registros = 0;
+        try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection  connec = db.getConnection();
+            Connection connec = db.getConnection();
             PreparedStatement stm = connec.prepareStatement(SQL_BORRAR);
             stm.setInt(1, carrito.getId());
             registros = stm.executeUpdate();
-            
-        }catch(SQLException ex){
-            System.out.println("Mensaje: "+ Arrays.toString(ex.getStackTrace()));
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
-         
+
         }
         return registros;
-        
+
     }
-    
+
     @Override
     public int actualizar(Carrito carrito) {
         int registros = 0;
-        try{
+        try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection  connec = db.getConnection();
+            Connection connec = db.getConnection();
             PreparedStatement stm = connec.prepareStatement(SQL_ACTUALIZAR);
-            
-            
-            stm.setString(1, carrito.getId_usuario().getCedula());
-            stm.setDate(2, (java.sql.Date) carrito.getFecha());
+
+            Date fechaActual = new Date();
+
+            java.sql.Date fecha = new java.sql.Date(fechaActual.getTime());
+
+            stm.setDate(1, fecha);
+            stm.setInt(2, carrito.getActivo());
             stm.setInt(3, carrito.getId());
-            
+
             registros = stm.executeUpdate();
-            
-        }catch(SQLException ex){
-            System.out.println("Mensaje: "+ Arrays.toString(ex.getStackTrace()));
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
-         
+
         }
         return registros;
     }
     
+    @Override
+    public int activar(Carrito carrito) {
+        int registros = 0;
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
+            PreparedStatement stm = connec.prepareStatement(SQL_ACTIVAR);
+
+            Date fechaActual = new Date();
+
+            java.sql.Date fecha = new java.sql.Date(fechaActual.getTime());
+
+            stm.setDate(1, fecha);
+            stm.setInt(2, 1);
+            stm.setInt(3, carrito.getId());
+
+            registros = stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+
+        }
+        return registros;
+    }
+    
+    @Override
+    public int desactivar(Carrito carrito) {
+        int registros = 0;
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
+            PreparedStatement stm = connec.prepareStatement(SQL_DESACTIVAR);
+
+            Date fechaActual = new Date();
+
+            java.sql.Date fecha = new java.sql.Date(fechaActual.getTime());
+
+            stm.setDate(1, fecha);
+            stm.setInt(2, 0);
+            stm.setInt(3, carrito.getId());
+
+            registros = stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+
+        }
+        return registros;
+    }
+
 }

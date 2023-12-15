@@ -15,6 +15,7 @@ import java.util.Date;
 public class Carrito {
     private int id;
     private Usuario id_usuario;
+    private int activo;
     @JsonbDateFormat("yyyy-MM-dd")
     private Date fecha;
 
@@ -22,10 +23,21 @@ public class Carrito {
     public Carrito() {
     }
 
-    public Carrito(int id, Usuario id_usuario, Date fecha) {
+    public Carrito(int id, Usuario id_usuario, Date fecha, int activo) {
         this.id = id;
         this.id_usuario = id_usuario;
         this.fecha = fecha;
+        this.activo = activo;
+    }
+    
+    public Carrito(int id, Usuario id_usuario) {
+        this.id = id;
+        this.id_usuario = id_usuario;
+    }
+    
+    public Carrito(int id, int activo) {
+        this.id = id;
+        this.activo = activo;
     }
 
     public Carrito(int id) {
@@ -81,6 +93,20 @@ public class Carrito {
 
     public static Carrito valueOf(String id) {
         return new Carrito(Integer.parseInt(id));
+    }
+
+    /**
+     * @return the activo
+     */
+    public int getActivo() {
+        return activo;
+    }
+
+    /**
+     * @param activo the activo to set
+     */
+    public void setActivo(int activo) {
+        this.activo = activo;
     }
 
     
