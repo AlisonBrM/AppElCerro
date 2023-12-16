@@ -19,4 +19,5 @@ public interface DetallesServices {
     //public int eliminar(Detalles detalles);
     public int restarProducto(Detalles detalles);
     public int sumarProducto(Detalles detalles);
+    public int productosEnCero(Detalles detalle);
 }

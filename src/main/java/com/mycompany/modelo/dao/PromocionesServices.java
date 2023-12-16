@@ -18,5 +18,7 @@ public interface PromocionesServices {
     public int crear(Promociones promociones);
     public int eliminar(Promociones promociones);
     public int actualizar(Promociones promociones);
+    public int activar();
+    public int desactivar();
 
 }

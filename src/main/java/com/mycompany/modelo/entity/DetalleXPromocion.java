@@ -11,6 +11,19 @@ package com.mycompany.modelo.entity;
 public class DetalleXPromocion {
     private Producto Id_producto;
     private Promociones Id_promocion;
+    private float precio_descuento;
+
+    public DetalleXPromocion(Producto Id_producto, Promociones Id_promocion, float precio_descuento) {
+        this.Id_producto = Id_producto;
+        this.Id_promocion = Id_promocion;
+        this.precio_descuento = precio_descuento;
+    }
+
+    public DetalleXPromocion(float precio_descuento, Promociones Id_promocion ) {
+        this.Id_promocion = Id_promocion;
+        this.precio_descuento = precio_descuento;
+    }
+    
 
     public DetalleXPromocion(Producto Id_producto, Promociones Id_promocion) {
         this.Id_producto = Id_producto;
@@ -50,6 +63,20 @@ public class DetalleXPromocion {
      */
     public void setId_promocion(Promociones Id_promocion) {
         this.Id_promocion = Id_promocion;
+    }
+
+    /**
+     * @return the precio_descuento
+     */
+    public float getPrecio_descuento() {
+        return precio_descuento;
+    }
+
+    /**
+     * @param precio_descuento the precio_descuento to set
+     */
+    public void setPrecio_descuento(float precio_descuento) {
+        this.precio_descuento = precio_descuento;
     }
     
 }

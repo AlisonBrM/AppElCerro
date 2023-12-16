@@ -35,8 +35,10 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
             + "JOIN promocionesxproducto p ON dp.id_promocion = p.id_promocion "
             + "WHERE dp.id_promocion = ?";
     private final String SQL_BUSCAR_PRODUCTO = "SELECT * FROM detallexpromo WHERE id_producto = ?";
-    private final String SQL_INSERTAR = "INSERT INTO detallexpromo(id_producto,id_promocion) VALUES(?,?)";
-    private final String SQL_ACTUALIZAR = "UPDATE detallexpromo SET id_producto = ? WHERE id_promocion = ?";
+    private final String SQL_INSERTAR = "INSERT INTO detallexpromo(id_producto,id_promocion, precio_descuento) VALUES(?,?,?)";
+    private final String SQL_ACTUALIZAR = "UPDATE detallexpromo SET precio_descuento = ? WHERE id_promocion = ?";
+    private final String SQL_CONSULTAR_DESCUENTO = "SELECT descuento FROM promocionesxproducto WHERE id_promocion = ?";
+    private final String SQL_CONSULTAR_PRECIO_PRODUCTO = "SELECT precio FROM producto WHERE id = ?";
     List<Map<String, Object>> promociones = new ArrayList<>();
 
     @Override
@@ -112,9 +114,14 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
                 BaseDeDatos db = BaseDeDatos.getInstance();
                 Connection connec = db.getConnection();
 
+                float precioProducto = obtenerPrecioProducto(detalleX.getId_producto().getId());
+
+                float precioDescuento = calcularPrecioConDescuento(detalleX, precioProducto);
+                
                 PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
                 stm.setString(2, detalleX.getId_promocion().getId_promocion());
                 stm.setString(1, detalleX.getId_producto().getId());
+                stm.setFloat(3, precioDescuento);
 
                 registros = stm.executeUpdate();
             }
@@ -135,7 +142,7 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
             Connection connec = db.getConnection();
             PreparedStatement stm = connec.prepareStatement(SQL_ACTUALIZAR);
 
-            stm.setString(1, promocion.getId_producto().getId());
+            stm.setFloat(1, promocion.getPrecio_descuento());
             stm.setString(2, promocion.getId_promocion().getId_promocion());
             registros = stm.executeUpdate();
 
@@ -165,5 +172,52 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
         }
 
         return existe;
+    }
+
+    public float calcularPrecioConDescuento(DetalleXPromocion promocion, float precioOriginal) {
+        float precioConDescuento = precioOriginal;
+
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
+            PreparedStatement stm = connec.prepareStatement(SQL_CONSULTAR_DESCUENTO);
+            stm.setString(1, promocion.getId_promocion().getId_promocion());
+
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                int descuento = rs.getInt("descuento");
+
+                precioConDescuento = precioOriginal - (precioOriginal * descuento / 100);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        System.out.println(precioConDescuento);
+        return precioConDescuento;
+    }
+
+    private float obtenerPrecioProducto(String idProducto) {
+        float precioProducto = 0;
+
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
+            PreparedStatement stm = connec.prepareStatement(SQL_CONSULTAR_PRECIO_PRODUCTO);
+            stm.setString(1, idProducto);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                precioProducto = rs.getFloat("precio");
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+
+        return precioProducto;
     }
 }

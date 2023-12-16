@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,9 +26,11 @@ public class PromocionesDao implements PromocionesServices {
     
     private final String sql = "SELECT * FROM promocionesxproducto";
     private final String SQL_CONSULTAID =  "SELECT * FROM promocionesxproducto WHERE id_promocion = ?";
-    private final String SQL_INSERTAR = "INSERT INTO promocionesxproducto(id_promocion, nombre, descuento ,fecha_inicio, fecha_fin) VALUES(?,?,?,?,?)";
+    private final String SQL_INSERTAR = "INSERT INTO promocionesxproducto(id_promocion, nombre, descuento ,fecha_inicio, fecha_fin, activo) VALUES(?,?,?,?,?,?)";
     private final String SQL_BORRAR = "DELETE FROM promocionesxproducto WHERE id_promocion = ?";
     private final String SQL_ACTUALIZAR = "UPDATE promocionesxproducto SET nombre = ?, descuento = ?, fecha_inicio = ?, fecha_fin = ? WHERE id_promocion = ?";
+    private final String SQL_ACTUALIZAR_ACTIVO = "UPDATE promocionesxproducto SET activo = 1 WHERE fecha_inicio <= ? AND fecha_fin >= ?";
+    private final String SQL_ACTUALIZAR_DESACTIVO = "UPDATE promocionesxproducto SET activo = 0 WHERE fecha_inicio > ? AND fecha_fin < ?";
     List<Promociones> promociones = new ArrayList<>();
     
     @Override
@@ -106,6 +109,7 @@ public class PromocionesDao implements PromocionesServices {
             stm.setDate(4,  fecha_inicio);
             stm.setDate(5,  fecha_fin);
             registros = stm.executeUpdate();
+            activar();
             
         }catch(SQLException ex){
             System.out.println("Mensaje: "+ Arrays.toString(ex.getStackTrace()));
@@ -158,5 +162,53 @@ public class PromocionesDao implements PromocionesServices {
         }
         return registros;
     }
+    
+    @Override
+    public int activar() {
+    int registros = 0;
 
+    try {
+        BaseDeDatos db = BaseDeDatos.getInstance();
+        Connection connec = db.getConnection();
+        PreparedStatement stm = connec.prepareStatement(SQL_ACTUALIZAR_ACTIVO);
+
+        LocalDate fechaActual = LocalDate.now();
+        java.sql.Date fechaSqlActual = java.sql.Date.valueOf(fechaActual);
+
+        stm.setDate(1, fechaSqlActual);
+        stm.setDate(2, fechaSqlActual);
+        stm.setDate(3, fechaSqlActual);
+        stm.setDate(4, fechaSqlActual);
+
+        registros = stm.executeUpdate();
+    } catch (SQLException ex) {
+        System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+        JOptionPane.showMessageDialog(null, ex.getMessage());
+    }
+
+    return registros;
+}
+    @Override
+    public int desactivar() {
+        int registros = 0;
+
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
+            PreparedStatement stm = connec.prepareStatement(SQL_ACTUALIZAR_DESACTIVO);
+            
+            java.util.Date fechaActual = new java.util.Date();
+
+            java.sql.Date fecha = new java.sql.Date(fechaActual.getTime());
+
+            stm.setDate(1, fecha);
+
+            registros = stm.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+
+        return registros;
+    }
 }

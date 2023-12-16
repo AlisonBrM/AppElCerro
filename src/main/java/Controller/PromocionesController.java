@@ -34,4 +34,12 @@ public class PromocionesController {
     public int actualizar(Promociones promocionesActualizar){
         return producto.actualizar(promocionesActualizar);
     }
+    
+    public int activar(){
+        return producto.activar();
+    }
+    
+    public int desactivar(){
+        return producto.desactivar();
+    }
 }

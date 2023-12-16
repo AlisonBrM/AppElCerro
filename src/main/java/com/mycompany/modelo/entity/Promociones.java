@@ -18,6 +18,7 @@ public class Promociones {
     private float descuento;
     private Date fecha_inicio;
     private Date fecha_fin;
+    private int activo;
 
     
     public Promociones() {
@@ -34,6 +35,15 @@ public class Promociones {
         this.descuento = descuento;
         this.fecha_inicio = fecha_inicio;
         this.fecha_fin = fecha_fin;
+    }
+
+    public Promociones(String id_promocion, String nombre, float descuento, Date fecha_inicio, Date fecha_fin, int activo) {
+        this.id_promocion = id_promocion;
+        this.nombre = nombre;
+        this.descuento = descuento;
+        this.fecha_inicio = fecha_inicio;
+        this.fecha_fin = fecha_fin;
+        this.activo = activo;
     }
 
     /**
@@ -109,6 +119,20 @@ public class Promociones {
      */
     public void setFecha_fin(Date fecha_fin) {
         this.fecha_fin = fecha_fin;
+    }
+
+    /**
+     * @return the activo
+     */
+    public int getActivo() {
+        return activo;
+    }
+
+    /**
+     * @param activo the activo to set
+     */
+    public void setActivo(int activo) {
+        this.activo = activo;
     }
     
     

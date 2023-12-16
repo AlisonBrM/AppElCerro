@@ -38,4 +38,8 @@ public class DetallesController {
     public int sumarProducto(Detalles detalle){
         return detalles.sumarProducto(detalle);
     }
+    
+    public int productosEnCero(Detalles detalle){
+        return detalles.productosEnCero(detalle);
+    }
 }
