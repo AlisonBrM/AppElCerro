@@ -16,7 +16,7 @@ public class TestDetalleXPromocion {
     public static void main(String[] args) {
         DetalleXPromocionDao dp = new DetalleXPromocionDao();
         Promociones p = new Promociones("1112233");
-        Producto po = new Producto ("18");
+        Producto po = new Producto ("7");
         
         int r = 0;
         //float precioDescuento = dp.calcularPrecioConDescuento(new DetalleXPromocion(po,p), 2.1F);

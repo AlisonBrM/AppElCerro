@@ -16,7 +16,7 @@ import com.mycompany.modelo.entity.Producto;
 public class TestDetallesDao {
     public static void main(String[] args) {
         DetallesDao d = new DetallesDao();
-        Carrito car = new Carrito(2);
+        Carrito car = new Carrito(1);
         Producto p = new Producto("18");
         int r = 0;
         //r = d.crear(new Detalles(car, p, 1));
@@ -26,7 +26,11 @@ public class TestDetallesDao {
         //System.out.println(d.productosEnCero(new Detalles(car)));
         //System.out.println(d.consultarId(new Detalles(car)));
         //System.out.println(d.totalAPagar(car));
+        //System.out.println(d.puedeComprar(car));
         //System.out.println(d.consultar());
+        
+        //d.comprar(new Detalles(car));
+        
         System.out.println(r);
     }
 }

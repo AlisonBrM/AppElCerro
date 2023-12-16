@@ -30,7 +30,8 @@ public class DetallesDao implements DetallesServices {
             + "    u.nombre AS nombre_usuario, "
             + "    p.nombre AS nombre_producto, "
             + "    ROUND(COALESCE(dp.precio_descuento, p.precio), 2) AS precio, "
-            + "    d.cantidad "
+            + "    p.cantidad AS cantidad_disponible, "
+            + "    COALESCE(d.cantidad, 0) AS cantidad_comprada "
             + "FROM "
             + "    detalle d "
             + "    JOIN carrito c ON d.id_carrito = c.id "
@@ -44,7 +45,8 @@ public class DetallesDao implements DetallesServices {
             + "    u.nombre AS nombre_usuario, "
             + "    p.nombre AS nombre_producto, "
             + "    ROUND(COALESCE(dp.precio_descuento, p.precio), 2) AS precio, "
-            + "    d.cantidad "
+            + "    p.cantidad AS cantidad_disponible, "
+            + "    COALESCE(d.cantidad, 0) AS cantidad_comprada "
             + "FROM "
             + "    detalle d "
             + "    JOIN carrito c ON d.id_carrito = c.id "
@@ -71,16 +73,20 @@ public class DetallesDao implements DetallesServices {
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
-                Map<String, Object> detalleMap = new HashMap<>();
+                int cantidad = rs.getInt("cantidad_comprada");
+                if (cantidad > 0) {
+                    Map<String, Object> detalleMap = new HashMap<>();
 
-                detalleMap.put("id_carrito", rs.getInt("id_carrito"));
-                detalleMap.put("fecha", rs.getString("fecha"));
-                detalleMap.put("nombre_usuario", rs.getString("nombre_usuario"));
-                detalleMap.put("nombre_producto", rs.getString("nombre_producto"));
-                detalleMap.put("precio", rs.getDouble("precio"));
-                detalleMap.put("cantidad", rs.getInt("cantidad"));
+                    detalleMap.put("id_carrito", rs.getInt("id_carrito"));
+                    detalleMap.put("fecha", rs.getString("fecha"));
+                    detalleMap.put("nombre_usuario", rs.getString("nombre_usuario"));
+                    detalleMap.put("nombre_producto", rs.getString("nombre_producto"));
+                    detalleMap.put("precio", rs.getFloat("precio"));
+                    detalleMap.put("cantidad_disponible", rs.getInt("cantidad_disponible"));
+                    detalleMap.put("cantidad_comprada", rs.getInt("cantidad_comprada"));
 
-                detalles.add(detalleMap);
+                    detalles.add(detalleMap);
+                }
             }
         } catch (SQLException e) {
             System.out.println("Error al obtener la instancia de la base de datos: " + e.getMessage());
@@ -101,7 +107,7 @@ public class DetallesDao implements DetallesServices {
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
-                int cantidad = rs.getInt("cantidad");
+                int cantidad = rs.getInt("cantidad_comprada");
                 if (cantidad > 0) {
                     Map<String, Object> detalleMap = new HashMap<>();
 
@@ -109,8 +115,9 @@ public class DetallesDao implements DetallesServices {
                     detalleMap.put("fecha", rs.getString("fecha"));
                     detalleMap.put("nombre_usuario", rs.getString("nombre_usuario"));
                     detalleMap.put("nombre_producto", rs.getString("nombre_producto"));
-                    detalleMap.put("precio", rs.getDouble("precio"));
-                    detalleMap.put("cantidad", cantidad);
+                    detalleMap.put("precio", rs.getFloat("precio"));
+                    detalleMap.put("cantidad_disponible", rs.getInt("cantidad_disponible"));
+                    detalleMap.put("cantidad_comprada", rs.getInt("cantidad_comprada"));
 
                     detallesList.add(detalleMap);
                 }
@@ -128,7 +135,7 @@ public class DetallesDao implements DetallesServices {
     public int crear(Detalles detalles) {
         int registros = 0;
         try {
-            if (!tieneProductos(detalles.getId_carrito().getId())) {
+            if (!tieneProductos(detalles)) {
                 CarritoDao carrito = new CarritoDao();
                 carrito.activar(new Carrito(detalles.getId_carrito().getId()));
             }
@@ -167,7 +174,7 @@ public class DetallesDao implements DetallesServices {
 
             registros = stm.executeUpdate();
 
-            if (!tieneProductos(detalles.getId_carrito().getId())) {
+            if (!tieneProductos(detalles)) {
                 CarritoDao carrito = new CarritoDao();
                 carrito.desactivar(new Carrito(detalles.getId_carrito().getId()));
             }
@@ -200,30 +207,30 @@ public class DetallesDao implements DetallesServices {
         }
         return registros;
     }
-    
+
     @Override
     public int productosEnCero(Detalles detalle) {
-    int registrosActualizados = 0;
+        int registrosActualizados = 0;
 
-    try {
-        BaseDeDatos db = BaseDeDatos.getInstance();
-        Connection connec = db.getConnection();
-        PreparedStatement stm = connec.prepareStatement(SQL_PRODUCTOS_EN_CERO);
-        stm.setInt(1, detalle.getId_carrito().getId());
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            Connection connec = db.getConnection();
+            PreparedStatement stm = connec.prepareStatement(SQL_PRODUCTOS_EN_CERO);
+            stm.setInt(1, detalle.getId_carrito().getId());
 
-        registrosActualizados = stm.executeUpdate();
-        
-        CarritoDao carrito = new CarritoDao();
-        
-        carrito.desactivar(detalle.getId_carrito());
-        
-    } catch (SQLException ex) {
-        System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
-        JOptionPane.showMessageDialog(null, ex.getMessage());
+            registrosActualizados = stm.executeUpdate();
+
+            CarritoDao carrito = new CarritoDao();
+
+            carrito.desactivar(detalle.getId_carrito());
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+
+        return registrosActualizados;
     }
-
-    return registrosActualizados;
-}
 
     public boolean existeProducto(Detalles detalle) {
         boolean existe = false;
@@ -247,7 +254,7 @@ public class DetallesDao implements DetallesServices {
         return existe;
     }
 
-    public boolean tieneProductos(int idCarrito) {
+    public boolean tieneProductos(Detalles detalle) {
         boolean tieneProductos = false;
 
         try {
@@ -255,7 +262,7 @@ public class DetallesDao implements DetallesServices {
             Connection connec = db.getConnection();
             PreparedStatement stm = connec.prepareStatement(SQL_TIENE_PRODUCTOS);
 
-            stm.setInt(1, idCarrito);
+            stm.setInt(1, detalle.getId_carrito().getId());
 
             try (ResultSet rs = stm.executeQuery()) {
                 int sumaCantidades = 0;
@@ -273,18 +280,5 @@ public class DetallesDao implements DetallesServices {
         return tieneProductos;
     }
 
-    public float totalAPagar(Carrito idCarrito) {
-        float total = 0;
-
-        List<Map<String, Object>> detallesList = consultarId(new Detalles(idCarrito));
-
-        for (Map<String, Object> detalle : detallesList) {
-            float precio = (float) detalle.get("precio");
-            int cantidad = (int) detalle.get("cantidad");
-            total += precio * cantidad;
-        }
-
-        return total;
-    }
-
+    
 }

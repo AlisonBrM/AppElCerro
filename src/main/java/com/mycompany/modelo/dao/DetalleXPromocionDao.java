@@ -25,11 +25,11 @@ import javax.swing.JOptionPane;
  */
 public class DetalleXPromocionDao implements DetalleXPromocionServices {
 
-    private final String sql = "SELECT dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin "
+    private final String sql = "SELECT dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin, dp.precio_descuento "
             + "FROM detallexpromo dp "
             + "JOIN producto pr ON dp.id_producto = pr.id "
             + "JOIN promocionesxproducto p ON dp.id_promocion = p.id_promocion";
-    private final String SQL_CONSULTAID = "SELECT dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin "
+    private final String SQL_CONSULTAID = "SELECT dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin, dp.precio_descuento "
             + "FROM detallexpromo dp "
             + "JOIN producto pr ON dp.id_producto = pr.id "
             + "JOIN promocionesxproducto p ON dp.id_promocion = p.id_promocion "
@@ -61,6 +61,7 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
                 detalleMap.put("descuento", rs.getInt("descuento"));
                 detalleMap.put("fecha_inicio", rs.getString("fecha_inicio"));
                 detalleMap.put("fecha_fin", rs.getString("fecha_fin"));
+                detalleMap.put("precio_descuento", rs.getString("precio_descuento"));
 
                 promociones.add(detalleMap);
             }
@@ -93,6 +94,7 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
                 detalleMap.put("descuento", rs.getInt("descuento"));
                 detalleMap.put("fecha_inicio", rs.getString("fecha_inicio"));
                 detalleMap.put("fecha_fin", rs.getString("fecha_fin"));
+                detalleMap.put("precio", rs.getString("precio"));
 
                 detallesList.add(detalleMap);
             }
