@@ -66,7 +66,7 @@ public class DetalleXPromocionResources {
     }
 
     @POST
-    @Path("/detallexpromo/")
+    @Path("/detallexpromoCrear/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response crear(DetalleXPromocion detalleXPromocion) {

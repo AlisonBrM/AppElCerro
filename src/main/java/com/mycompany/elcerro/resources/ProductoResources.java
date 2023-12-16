@@ -73,7 +73,7 @@ public class ProductoResources {
     }
     
     @POST
-    @Path("/productos/")
+    @Path("/productosCrear/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response crear(Producto productos){

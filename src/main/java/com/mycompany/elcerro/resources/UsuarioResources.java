@@ -60,7 +60,7 @@ public class UsuarioResources {
     }
     
     @POST
-    @Path("/usuarios/")
+    @Path("/usuariosCrear/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response crear(Usuario usuario){

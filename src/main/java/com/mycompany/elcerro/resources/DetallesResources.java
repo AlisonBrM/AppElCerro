@@ -63,7 +63,7 @@ public class DetallesResources {
     }
 
     @POST
-    @Path("/detalles/")
+    @Path("/detallesCrear/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response crear(Detalles detalle) {
@@ -76,7 +76,7 @@ public class DetallesResources {
     }
 
     @POST
-    @Path("/restarProducto")
+    @Path("/detallesRestarProducto")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response restarProducto(Detalles detalles) {
@@ -90,7 +90,7 @@ public class DetallesResources {
     }
 
     @POST
-    @Path("/sumarProducto")
+    @Path("/detallesSumarProducto")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response sumarProducto(Detalles detalles) {
