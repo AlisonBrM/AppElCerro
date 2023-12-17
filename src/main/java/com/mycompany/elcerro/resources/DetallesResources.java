@@ -102,5 +102,28 @@ public class DetallesResources {
             return Response.status(Response.Status.NOT_MODIFIED).entity("No se realizó ninguna modificación").build();
         }
     }
-
+    
+    @POST
+    @Path("/detallesEnCero")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response productosEnCero(Detalles detalles) {
+        try{
+            int registros = detallesController.productosEnCero(detalles);
+            return Response.status(Response.Status.CREATED).entity(detalles).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    
+    @POST
+    @Path("/detallesComprar")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response comprar(Detalles detalles) {
+         detallesController.comprar(detalles);
+        return null;
+    }
+    
 }

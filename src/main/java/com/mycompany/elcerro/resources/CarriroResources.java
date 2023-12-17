@@ -88,6 +88,34 @@ public class CarriroResources {
         }
     }
     
+    @POST
+    @Path("/carritoActivo/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response activar(Carrito carrito){
+        try{
+            carritoController.activar(carrito);
+            return Response.status(Response.Status.CREATED).entity(carrito).build();
+        }
+        catch(Exception ex){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @POST
+    @Path("/carritoDesactivo/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response desactivar(Carrito carrito){
+        try{
+            carritoController.desactivar(carrito);
+            return Response.status(Response.Status.CREATED).entity(carrito).build();
+        }
+        catch(Exception ex){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
     @DELETE
     @Path("/carritos/{id}")
     @Produces(MediaType.APPLICATION_JSON)

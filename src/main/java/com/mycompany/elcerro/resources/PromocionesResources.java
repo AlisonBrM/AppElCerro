@@ -87,6 +87,35 @@ public class PromocionesResources {
         }
     }
     
+    @POST
+    @Path("/promocionesxproductoActivar/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response activar(){
+        try{
+            int i = promoController. activar();
+            return Response.status(Response.Status.CREATED).build();
+        }
+        catch(Exception ex){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @POST
+    @Path("/promocionesxproductoDesactivar/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response desactivar(){
+        try{
+            int i = promoController. desactivar();
+            return Response.status(Response.Status.CREATED).build();
+        }
+        catch(Exception ex){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    
     @DELETE
     @Path("/promocionesxproducto/{id_promocion}")
     @Produces(MediaType.APPLICATION_JSON)

@@ -34,7 +34,7 @@ public class PromocionesController {
     public int actualizar(Promociones promocionesActualizar){
         return producto.actualizar(promocionesActualizar);
     }
-    // haga post... hpta
+    // haga post
     public int activar(){
         return producto.activar();
     }

@@ -34,7 +34,7 @@ public class CarritoController {
     public int actualizar(Carrito carritoActualizar){
         return carrito.actualizar(carritoActualizar);
     }
-    //post activar y desactivar(no me joda la vida)
+    //post activar y desactivar()
     public int activar(Carrito carritoActualizar){
         return carrito.activar(carritoActualizar);
     }
