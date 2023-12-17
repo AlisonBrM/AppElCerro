@@ -177,8 +177,6 @@ public class PromocionesDao implements PromocionesServices {
 
         stm.setDate(1, fechaSqlActual);
         stm.setDate(2, fechaSqlActual);
-        stm.setDate(3, fechaSqlActual);
-        stm.setDate(4, fechaSqlActual);
 
         registros = stm.executeUpdate();
     } catch (SQLException ex) {

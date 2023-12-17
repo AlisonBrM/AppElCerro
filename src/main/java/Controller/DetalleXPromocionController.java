@@ -33,8 +33,4 @@ public class DetalleXPromocionController {
         return detalles.actualizar(detallesCrear);
     }
     
-    public boolean existeProducto(String idProducto) {
-        return detalles.existeProducto(idProducto);
-    }
-    
 }

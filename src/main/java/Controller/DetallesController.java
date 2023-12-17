@@ -39,7 +39,7 @@ public class DetallesController {
     public int sumarProducto(Detalles detalle){
         return detalles.sumarProducto(detalle);
     }
-    
+    // hacer post
     public int productosEnCero(Detalles detalle){
         return detalles.productosEnCero(detalle);
     }
@@ -79,7 +79,7 @@ public class DetallesController {
 
         return true;
     }
-    
+    // hacer post
     public void comprar(Detalles detalle){
         if(!puedeComprar(detalle)){
             
