@@ -29,7 +29,7 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
             + "FROM detallexpromo dp "
             + "JOIN producto pr ON dp.id_producto = pr.id "
             + "JOIN promocionesxproducto p ON dp.id_promocion = p.id_promocion";
-    private final String SQL_CONSULTAID = "SELECT dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin, dp.precio_descuento, pr.precio AS precio_sin_descuento, pr.descripcion, pr.img "
+    private final String SQL_CONSULTAID = "SELECT pr.id AS id_producto, dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin, dp.precio_descuento, pr.precio AS precio_sin_descuento, pr.descripcion, pr.img "
             + "FROM detallexpromo dp "
             + "JOIN producto pr ON dp.id_producto = pr.id "
             + "JOIN promocionesxproducto p ON dp.id_promocion = p.id_promocion "

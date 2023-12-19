@@ -15,8 +15,8 @@ import com.mycompany.modelo.entity.Promociones;
 public class TestDetalleXPromocion {
     public static void main(String[] args) {
         DetalleXPromocionDao dp = new DetalleXPromocionDao();
-        Promociones p = new Promociones("1112233");
-        Producto po = new Producto ("7");
+        Promociones p = new Promociones("1");
+        Producto po = new Producto ("16");
         
         int r = 0;
         //float precioDescuento = dp.calcularPrecioConDescuento(new DetalleXPromocion(po,p), 2.1F);

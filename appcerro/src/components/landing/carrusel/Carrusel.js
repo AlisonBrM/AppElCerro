@@ -15,14 +15,14 @@ function Carrusel() {
 
   return (
     <div className="slider-container">
-      <Link to="/productsDiscount" className="slide-link">
+      <Link to="/productsDiscount/1" className="slide-link">
         <img
           src="https://i.postimg.cc/4dDgQRm5/1.png"
           alt="img 1"
           className={currentSlide === 0 ? "slide showing" : "slide"}
         />
       </Link>
-      <Link to="/productsDiscount" className="slide-link">
+      <Link to="/productsDiscount/2" className="slide-link">
         <img
           src="https://i.postimg.cc/kXFmKZ9Q/2.png"
           alt="img 2"
