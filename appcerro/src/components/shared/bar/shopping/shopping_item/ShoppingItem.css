@@ -1,0 +1,20 @@
+.shopping-item {
+    display: flex;
+}
+
+.shopping-item-edit{
+    display: flex;
+    width: 100px;
+    height: 10px;
+    justify-content: space-around;
+}
+
+.shopping-item-button-trash img{
+    width: 10px;
+    height: 10px;
+}
+
+.shopping-item-button-plus img{
+    width: 10px;
+    height: 10px;
+}

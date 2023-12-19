@@ -1,0 +1,51 @@
+.footer {
+  background-color: #9ED890;
+  color: rgb(0, 0, 0);
+
+  position: absolute;
+  bottom: 10;
+  width: 100%;
+  margin-top: 100px auto 0;
+  height: 40px; 
+  /* Puedes ajustar esto según sea necesario */
+}
+
+.footer-content {
+  background-color: #9ED890;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 5px;
+}
+
+.footer-contact-info,
+.footer-about-us {
+  max-width: 300px;
+}
+
+.footer-phone-number {
+  font-weight: bold;
+}
+
+.footer-logo-container {
+  background-color: #9ED890;
+  margin-top: 1px;
+}
+
+.footer-logo-image {
+  width: 200px;
+  height: auto;
+}
+
+.footer-social-icons {
+  display: flex;
+  gap: 1px;
+}
+
+.footer-social-icon1,
+.footer-social-icon2,
+.footer-social-icon3,
+.footer-social-icon4 {
+  width: 30px;
+  /* Tamaño de las imágenes */
+}

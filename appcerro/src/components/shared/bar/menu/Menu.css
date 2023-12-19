@@ -1,0 +1,54 @@
+.menu {
+    background-color: #AB8742;
+}
+
+.menu-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1px;
+}
+
+.menu-navbar .fa-bars {
+    display: none;
+}
+
+.menu-items {
+    display: flex;
+    gap: 2rem;
+}
+
+.menu-items li {
+    list-style: none;
+    padding: 1px; /* Añadido un relleno para mayor espacio */
+}
+
+.menu-items a {
+    text-decoration: none;
+    font-size: 0.95rem; /* Ajusta el tamaño de la fuente según tus necesidades */
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+    font-family: 'Sorts Mill Goudy', serif;
+    position: relative; /* Añadida posición relativa para los seudoelementos */
+}
+
+.menu-items a::after {
+    content: "";
+    width: 100%;
+    height: 1px; /* Ajusta el grosor del sombreado según tus necesidades */
+    background-color: #ffffff;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform-origin: center;
+    transform: scaleX(0); /* Inicialmente, el sombreado está oculto */
+    transition: transform 0.3s ease;
+}
+
+.menu-items a:hover {
+    color: rgb(255, 255, 255);
+}
+
+.menu-items a:hover::after {
+    transform: scaleX(1); /* Muestra el sombreado al pasar el mouse */
+}

@@ -1,0 +1,76 @@
+.step1-title {
+    font-family: 'Sorts Mill Goudy', serif; 
+    margin-left: 30px;
+    font-size: 12px; 
+    color: #575757; 
+}
+
+.step1-title2 {
+    font-family: 'Sorts Mill Goudy', serif; 
+    margin-left: 30px;
+    font-size: 24px; 
+    color: #0c0c0c;
+}
+
+.step1-title3 {
+    font-family: 'Sorts Mill Goudy', serif; 
+    margin-left: 30px;
+    font-size: 15px; 
+    color: #0c0c0c;
+}
+
+.icons {
+    display: flex;
+    justify-content: center;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.icon-background {
+    background: radial-gradient(circle at 50% 50%, green, transparent 70%);
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px; 
+}
+
+.icons img {
+    width: 60px;
+}
+
+.arrow {
+    color: #575757;
+    font-size: 60px; 
+    align-items: center;
+}
+
+.shopping-and-button {
+    display: flex;
+    justify-content: space-between;
+}
+
+.total-and-button {
+    display: flex;
+    justify-content: space-between;
+}
+
+.next-step-button {
+    font-family: 'Sorts Mill Goudy', serif; 
+    font-size: 20px; 
+    font-weight: bold;
+    margin-left: 50px;
+    margin-right: 100px;
+    border-radius: 10px;
+    padding: 20px 30px; 
+    background: #AB8742;
+}
+
+
+
+

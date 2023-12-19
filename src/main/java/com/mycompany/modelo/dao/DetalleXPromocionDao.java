@@ -25,11 +25,11 @@ import javax.swing.JOptionPane;
  */
 public class DetalleXPromocionDao implements DetalleXPromocionServices {
 
-    private final String sql = "SELECT dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin, dp.precio_descuento "
+    private final String sql = "SELECT pr.id AS id_producto, dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin, dp.precio_descuento, pr.precio AS precio_sin_descuento, pr.descripcion, pr.img "
             + "FROM detallexpromo dp "
             + "JOIN producto pr ON dp.id_producto = pr.id "
             + "JOIN promocionesxproducto p ON dp.id_promocion = p.id_promocion";
-    private final String SQL_CONSULTAID = "SELECT dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin, dp.precio_descuento "
+    private final String SQL_CONSULTAID = "SELECT dp.id_promocion, p.nombre AS nombre_promocion, pr.nombre AS nombre_producto, p.descuento, p.fecha_inicio, p.fecha_fin, dp.precio_descuento, pr.precio AS precio_sin_descuento, pr.descripcion, pr.img "
             + "FROM detallexpromo dp "
             + "JOIN producto pr ON dp.id_producto = pr.id "
             + "JOIN promocionesxproducto p ON dp.id_promocion = p.id_promocion "
@@ -54,7 +54,8 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
 
             while (rs.next()) {
                 Map<String, Object> detalleMap = new HashMap<>();
-
+                
+                detalleMap.put("id_producto", rs.getString("id_producto"));
                 detalleMap.put("id_promocion", rs.getString("id_promocion"));
                 detalleMap.put("nombre_promocion", rs.getString("nombre_promocion"));
                 detalleMap.put("nombre_producto", rs.getString("nombre_producto"));
@@ -62,6 +63,9 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
                 detalleMap.put("fecha_inicio", rs.getString("fecha_inicio"));
                 detalleMap.put("fecha_fin", rs.getString("fecha_fin"));
                 detalleMap.put("precio_descuento", rs.getString("precio_descuento"));
+                detalleMap.put("precio_sin_descuento", rs.getString("precio_sin_descuento"));
+                detalleMap.put("descripcion", rs.getString("descripcion"));
+                detalleMap.put("img", rs.getString("img"));
 
                 promociones.add(detalleMap);
             }
@@ -88,13 +92,17 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
             while (rs.next()) {
                 Map<String, Object> detalleMap = new HashMap<>();
 
+                detalleMap.put("id_producto", rs.getString("id_producto"));
                 detalleMap.put("id_promocion", rs.getString("id_promocion"));
                 detalleMap.put("nombre_promocion", rs.getString("nombre_promocion"));
                 detalleMap.put("nombre_producto", rs.getString("nombre_producto"));
                 detalleMap.put("descuento", rs.getInt("descuento"));
                 detalleMap.put("fecha_inicio", rs.getString("fecha_inicio"));
                 detalleMap.put("fecha_fin", rs.getString("fecha_fin"));
-                detalleMap.put("precio", rs.getString("precio"));
+                detalleMap.put("precio_descuento", rs.getString("precio_descuento"));
+                detalleMap.put("precio_sin_descuento", rs.getString("precio_sin_descuento"));
+                detalleMap.put("descripcion", rs.getString("descripcion"));
+                detalleMap.put("img", rs.getString("img"));
 
                 detallesList.add(detalleMap);
             }

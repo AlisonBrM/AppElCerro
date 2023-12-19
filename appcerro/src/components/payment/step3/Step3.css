@@ -1,0 +1,92 @@
+.step3-title {
+    font-family: 'Sorts Mill Goudy', serif; 
+    margin-left: 30px;
+    font-size: 12px; 
+    color: #575757; 
+}
+
+.step3-title2 {
+    font-family: 'Sorts Mill Goudy', serif; 
+    margin-left: 30px;
+    font-size: 24px; 
+    color: #0c0c0c;
+}
+
+.step3-title3 {
+    font-family: 'Sorts Mill Goudy', serif; 
+    margin-left: 80px;
+    font-size: 20px; 
+    color: #0c0c0c;
+    text-align: left;
+    max-width: 800px;
+    padding: 50px 20px; 
+    
+    margin: auto;
+}
+
+.step3-title4 {
+    font-family: 'Sorts Mill Goudy', serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: #0c0c0c;
+    text-align: left;
+    max-width: 300px;
+    padding: 10px 10px;
+    margin: 40px 10px 30px 5px; 
+    border: 1px solid #0c0c0c; 
+    border-radius: 20px; 
+    background-color: #fcfbfa; 
+}
+
+.step3-title5 {
+    font-family: 'Sorts Mill Goudy', serif;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 1 px;
+    color: #fcfbfb;
+    text-align: left;
+    max-width: 300px;
+    margin: 0px 0px 5px 0px; 
+    border: 1px solid #0c0c0c; 
+    border-radius: 20px; 
+    background-color: #0c0c0c; 
+}
+
+
+.icons {
+    display: flex;
+    justify-content: center;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.icon-background {
+    background: radial-gradient(circle at 50% 50%, green, transparent 70%);
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px; 
+}
+
+.icons img {
+    width: 70px;
+}
+
+.next-step-button {
+    font-family: 'Sorts Mill Goudy', serif; 
+    font-size: 20px; 
+    font-weight: bold;
+    padding: 10px 40px; 
+    background: #AB8742;
+    color: #0c0c0c;
+    display: block; 
+    margin: auto auto auto 0; 
+    border: none; 
+    border-radius: 20px;
+}

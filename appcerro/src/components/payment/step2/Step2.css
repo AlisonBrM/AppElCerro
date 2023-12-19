@@ -1,0 +1,84 @@
+.step2-title {
+    font-family: 'Sorts Mill Goudy', serif; 
+    margin-left: 30px;
+    font-size: 12px; 
+    color: #575757; 
+}
+
+.step2-title2 {
+    font-family: 'Sorts Mill Goudy', serif; 
+    margin-left: 30px;
+    font-size: 24px; 
+    color: #0c0c0c;
+}
+
+.step2-title3 {
+    font-family: 'Sorts Mill Goudy', serif; 
+    margin-left: 20px;
+    font-size: 20px; 
+    color: #0c0c0c;
+    text-align: left;
+    max-width: 800px;
+    padding: 50px 50px; 
+    margin: auto;
+}
+
+.icons {
+    display: flex;
+    justify-content: center;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.icon-background {
+    background: radial-gradient(circle at 50% 50%, green, transparent 70%);
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px; 
+}
+
+.icons img {
+    width: 70px;
+}
+
+.input-field {
+    margin-bottom: 30px;
+    display: flex; 
+    flex-direction: column;
+}
+
+.input-field label {
+    display: flex;
+    justify-content: space-between; 
+    width: 95%; 
+}
+
+.input-field input {
+    width: 85%; 
+    margin-left: auto; 
+}
+
+.input-field div {
+    margin-bottom: 10px;
+}
+
+.next-step-button {
+    font-family: 'Sorts Mill Goudy', serif; 
+    font-size: 20px; 
+    font-weight: bold;
+    padding: 20px 60px; 
+    background: #AB8742;
+    color: #0c0c0c;
+    display: block; 
+    margin: auto; 
+    border: none; 
+    border-radius: 50px;
+}
+
