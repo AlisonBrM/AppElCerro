@@ -306,11 +306,12 @@ public class DetallesDao implements DetallesServices {
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
-            rs = stm.executeQuery();
 
             stm = connection.prepareStatement(SQL_BUSCAR_PRODUCTO);
             stm.setInt(1, detalle.getId_carrito().getId());
             stm.setString(2, detalle.getId_producto().getId());
+            
+            rs = stm.executeQuery();
 
             existe = rs.next();
 

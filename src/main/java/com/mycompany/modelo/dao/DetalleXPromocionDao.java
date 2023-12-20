@@ -102,9 +102,10 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
             stm = connection.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
-            rs = stm.executeQuery();
 
             stm.setString(1, detallesX.getId_promocion().getId_promocion());
+            
+            rs = stm.executeQuery();
 
             while (rs.next()) {
                 Map<String, Object> detalleMap = new HashMap<>();

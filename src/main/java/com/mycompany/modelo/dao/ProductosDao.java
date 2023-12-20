@@ -62,7 +62,7 @@ public class ProductosDao implements ProductosServices {
             }
 
         } catch (SQLException ex) {
-            System.out.println("Mensaje: " + ex.getStackTrace());
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }finally {
             try {
@@ -88,9 +88,10 @@ public class ProductosDao implements ProductosServices {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
             stm = connection.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
-            rs = stm.executeQuery();
             
             stm.setString(1, producto.getId());
+            
+            rs = stm.executeQuery();
  
             rs.absolute(1);
             String id = rs.getString("id");
@@ -104,7 +105,7 @@ public class ProductosDao implements ProductosServices {
             productoResultado = new Producto(id, nombre, tipo, precio, descripcion, cantidad, img);
 
         } catch (SQLException ex) {
-            System.out.println("Mensaje: " + ex.getStackTrace());
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }finally {
             try {
@@ -170,7 +171,7 @@ public class ProductosDao implements ProductosServices {
             registros = stm.executeUpdate();
 
         } catch (SQLException ex) {
-            System.out.println("Mensaje: " + ex.getStackTrace());
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
         }finally {
