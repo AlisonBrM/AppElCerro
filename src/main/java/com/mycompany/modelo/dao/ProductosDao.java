@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -36,12 +38,16 @@ public class ProductosDao implements ProductosServices {
 
     @Override
     public List<Producto> consultar() {
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
 
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(sql);
-            ResultSet rs = stm.executeQuery();
+            connection = db.getConnection();
+            stm = connection.prepareStatement(sql);
+            rs = stm.executeQuery();
 
             while (rs.next()) {
                 String id = rs.getString("id");
@@ -55,10 +61,17 @@ public class ProductosDao implements ProductosServices {
                 destinos.add(producto);
             }
 
-            //utilixzar la conexion
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + ex.getStackTrace());
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        }finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductosDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return destinos;
     }
@@ -66,13 +79,19 @@ public class ProductosDao implements ProductosServices {
     @Override
     public Producto consultarId(Producto producto) {
         Producto productoResultado = null;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
+            rs = stm.executeQuery();
+            
             stm.setString(1, producto.getId());
-            ResultSet rs = stm.executeQuery();
-
+ 
             rs.absolute(1);
             String id = rs.getString("id");
 
@@ -87,6 +106,14 @@ public class ProductosDao implements ProductosServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + ex.getStackTrace());
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        }finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductosDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return productoResultado;
     }
@@ -94,11 +121,15 @@ public class ProductosDao implements ProductosServices {
     @Override
     public int crear(Producto producto) {
         int registros = 0;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-
-            PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_INSERTAR);
+            
             stm.setString(1, producto.getId());
             stm.setString(2, producto.getNombre());
             stm.setString(3, producto.getTipo());
@@ -111,7 +142,13 @@ public class ProductosDao implements ProductosServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
-
+        }finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductosDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return registros;
     }
@@ -119,17 +156,30 @@ public class ProductosDao implements ProductosServices {
     @Override
     public int eliminar(Producto producto) {
         int registros = 0;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_BORRAR);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_BORRAR);
+            
             stm.setString(1, producto.getId());
+            
             registros = stm.executeUpdate();
 
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + ex.getStackTrace());
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
+        }finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductosDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return registros;
 
@@ -138,10 +188,15 @@ public class ProductosDao implements ProductosServices {
     @Override
     public int actualizar(Producto producto) {
         int registros = 0;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_ACTUALIZAR);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_ACTUALIZAR);
+            
             stm.setString(1, producto.getNombre());
             stm.setString(2, producto.getTipo());
             stm.setFloat(3, producto.getPrecio());
@@ -155,22 +210,40 @@ public class ProductosDao implements ProductosServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
+        }finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductosDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return registros;
     }
 
     public int restarProductos(Carrito idCarrito) {
         int registro = 0;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-
-            PreparedStatement stm = connec.prepareStatement(SQL_RESTAR_PRODUCTOS);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_RESTAR_PRODUCTOS);
+            
             stm.setInt(1, idCarrito.getId());
             registro = stm.executeUpdate();
 
         } catch (SQLException ex) {
             System.out.println("Error al actualizar cantidades: " + ex.getMessage());
+        }finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductosDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return registro;
     }

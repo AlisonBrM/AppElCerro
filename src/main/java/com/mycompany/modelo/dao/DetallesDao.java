@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -65,12 +67,15 @@ public class DetallesDao implements DetallesServices {
     @Override
     public List<Map<String, Object>> consultar() {
 
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(sql);
-
-            ResultSet rs = stm.executeQuery();
+            connection = db.getConnection();
+            stm = connection.prepareStatement(sql);
+            rs = stm.executeQuery();
 
             while (rs.next()) {
                 int cantidad = rs.getInt("cantidad_comprada");
@@ -90,8 +95,15 @@ public class DetallesDao implements DetallesServices {
             }
         } catch (SQLException e) {
             System.out.println("Error al obtener la instancia de la base de datos: " + e.getMessage());
+        } finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetallesDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-
         return detalles;
     }
 
@@ -99,12 +111,16 @@ public class DetallesDao implements DetallesServices {
     public List<Map<String, Object>> consultarId(Detalles detalles) {
         List<Map<String, Object>> detallesList = new ArrayList<>();
 
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
             stm.setInt(1, detalles.getId_carrito().getId());
-            ResultSet rs = stm.executeQuery();
+            rs = stm.executeQuery();
 
             while (rs.next()) {
                 int cantidad = rs.getInt("cantidad_comprada");
@@ -126,6 +142,14 @@ public class DetallesDao implements DetallesServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        } finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetallesDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return detallesList;
@@ -134,6 +158,8 @@ public class DetallesDao implements DetallesServices {
     @Override
     public int crear(Detalles detalles) {
         int registros = 0;
+        Connection connection = null;
+        PreparedStatement stm = null;
         try {
             if (!tieneProductos(detalles)) {
                 CarritoDao carrito = new CarritoDao();
@@ -143,9 +169,9 @@ public class DetallesDao implements DetallesServices {
                 sumarProducto(detalles);
             } else {
                 BaseDeDatos db = BaseDeDatos.getInstance();
-                Connection connec = db.getConnection();
+                connection = db.getConnection();
+                stm = connection.prepareStatement(SQL_INSERTAR);
 
-                PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
                 stm.setInt(1, detalles.getId_carrito().getId());
                 stm.setString(2, detalles.getId_producto().getId());
                 stm.setInt(3, detalles.getCantidad());
@@ -156,6 +182,13 @@ public class DetallesDao implements DetallesServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
+        } finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetallesDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return registros;
     }
@@ -163,11 +196,14 @@ public class DetallesDao implements DetallesServices {
     @Override
     public int restarProducto(Detalles detalles) {
         int registros = 0;
+
+        Connection connection = null;
+        PreparedStatement stm = null;
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-
-            PreparedStatement stm = connec.prepareStatement(SQL_BORRAR_PRODUCTO);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_BORRAR_PRODUCTO);
 
             stm.setInt(1, detalles.getId_carrito().getId());
             stm.setString(2, detalles.getId_producto().getId());
@@ -182,6 +218,13 @@ public class DetallesDao implements DetallesServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        } finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetallesDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return registros;
     }
@@ -190,10 +233,13 @@ public class DetallesDao implements DetallesServices {
     public int sumarProducto(Detalles detalles) {
         int registros = 0;
 
+        Connection connection = null;
+        PreparedStatement stm = null;
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_AGREGAR_PORDUCTO);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_AGREGAR_PORDUCTO);
 
             stm.setInt(1, detalles.getId_carrito().getId());
             stm.setString(2, detalles.getId_producto().getId());
@@ -204,6 +250,13 @@ public class DetallesDao implements DetallesServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
+        } finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetallesDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return registros;
     }
@@ -212,10 +265,14 @@ public class DetallesDao implements DetallesServices {
     public int productosEnCero(Detalles detalle) {
         int registrosActualizados = 0;
 
+        Connection connection = null;
+        PreparedStatement stm = null;
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_PRODUCTOS_EN_CERO);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_PRODUCTOS_EN_CERO);
+
             stm.setInt(1, detalle.getId_carrito().getId());
 
             registrosActualizados = stm.executeUpdate();
@@ -227,6 +284,13 @@ public class DetallesDao implements DetallesServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        } finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetallesDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return registrosActualizados;
@@ -235,20 +299,32 @@ public class DetallesDao implements DetallesServices {
     public boolean existeProducto(Detalles detalle) {
         boolean existe = false;
 
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            try (Connection connec = db.getConnection(); PreparedStatement stm = connec.prepareStatement(SQL_BUSCAR_PRODUCTO)) {
+            connection = db.getConnection();
+            rs = stm.executeQuery();
 
-                stm.setInt(1, detalle.getId_carrito().getId());
-                stm.setString(2, detalle.getId_producto().getId());
+            stm = connection.prepareStatement(SQL_BUSCAR_PRODUCTO);
+            stm.setInt(1, detalle.getId_carrito().getId());
+            stm.setString(2, detalle.getId_producto().getId());
 
-                try (ResultSet rs = stm.executeQuery()) {
-                    existe = rs.next();
-                }
-            }
+            existe = rs.next();
+
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        } finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetallesDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return existe;
@@ -257,28 +333,38 @@ public class DetallesDao implements DetallesServices {
     public boolean tieneProductos(Detalles detalle) {
         boolean tieneProductos = false;
 
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_TIENE_PRODUCTOS);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_TIENE_PRODUCTOS);
+            rs = stm.executeQuery();
 
             stm.setInt(1, detalle.getId_carrito().getId());
 
-            try (ResultSet rs = stm.executeQuery()) {
-                int sumaCantidades = 0;
-                while (rs.next()) {
-                    sumaCantidades += rs.getInt("cantidad");
-                }
+            int sumaCantidades = 0;
+            while (rs.next()) {
+                sumaCantidades += rs.getInt("cantidad");
 
                 tieneProductos = sumaCantidades > 0;
             }
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        } finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetallesDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return tieneProductos;
     }
 
-    
 }

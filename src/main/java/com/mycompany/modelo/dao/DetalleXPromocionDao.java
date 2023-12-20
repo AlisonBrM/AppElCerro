@@ -6,8 +6,6 @@ package com.mycompany.modelo.dao;
 
 import Red.BaseDeDatos;
 import com.mycompany.modelo.entity.DetalleXPromocion;
-import com.mycompany.modelo.entity.Producto;
-import com.mycompany.modelo.entity.Promociones;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +15,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -44,17 +44,21 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
     @Override
     public List<Map<String, Object>> consultar() {
 
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
         try {
 
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(sql);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(sql);
 
-            ResultSet rs = stm.executeQuery();
+            rs = stm.executeQuery();
 
             while (rs.next()) {
                 Map<String, Object> detalleMap = new HashMap<>();
-                
+
                 detalleMap.put("id_producto", rs.getString("id_producto"));
                 detalleMap.put("id_promocion", rs.getString("id_promocion"));
                 detalleMap.put("nombre_promocion", rs.getString("nombre_promocion"));
@@ -73,6 +77,14 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        } finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetalleXPromocionDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return promociones;
@@ -82,12 +94,17 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
     public List<Map<String, Object>> consultarId(DetalleXPromocion detallesX) {
         List<Map<String, Object>> detallesList = new ArrayList<>();
 
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
+            rs = stm.executeQuery();
+
             stm.setString(1, detallesX.getId_promocion().getId_promocion());
-            ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
                 Map<String, Object> detalleMap = new HashMap<>();
@@ -110,6 +127,14 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        } finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetalleXPromocionDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return detallesList;
     }
@@ -117,18 +142,22 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
     @Override
     public int crear(DetalleXPromocion detalleX) {
         int registros = 0;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        
         try {
             if (existeProducto(detalleX.getId_producto().getId())) {
                 return 0;
             } else {
                 BaseDeDatos db = BaseDeDatos.getInstance();
-                Connection connec = db.getConnection();
+                connection = db.getConnection();
 
                 float precioProducto = obtenerPrecioProducto(detalleX.getId_producto().getId());
 
                 float precioDescuento = calcularPrecioConDescuento(detalleX, precioProducto);
-                
-                PreparedStatement stm = connec.prepareStatement(SQL_INSERTAR);
+
+                stm = connection.prepareStatement(SQL_INSERTAR);
                 stm.setString(2, detalleX.getId_promocion().getId_promocion());
                 stm.setString(1, detalleX.getId_producto().getId());
                 stm.setFloat(3, precioDescuento);
@@ -140,6 +169,13 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
+        }finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetalleXPromocionDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return registros;
     }
@@ -147,10 +183,14 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
     @Override
     public int actualizar(DetalleXPromocion promocion) {
         int registros = 0;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_ACTUALIZAR);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_ACTUALIZAR);
 
             stm.setFloat(1, promocion.getPrecio_descuento());
             stm.setString(2, promocion.getId_promocion().getId_promocion());
@@ -160,25 +200,45 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
+        }finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetalleXPromocionDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return registros;
     }
 
     public boolean existeProducto(String idProducto) {
         boolean existe = false;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
 
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_BUSCAR_PRODUCTO);
-            stm.setString(1, idProducto);
-            ResultSet rs = stm.executeQuery();
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_BUSCAR_PRODUCTO);
+            rs = stm.executeQuery();
+            
+            stm.setString(1, idProducto);  
 
             existe = rs.next();
 
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        }finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetalleXPromocionDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return existe;
@@ -186,14 +246,19 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
 
     public float calcularPrecioConDescuento(DetalleXPromocion promocion, float precioOriginal) {
         float precioConDescuento = precioOriginal;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
 
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_CONSULTAR_DESCUENTO);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_CONSULTAR_DESCUENTO);
+            
             stm.setString(1, promocion.getId_promocion().getId_promocion());
 
-            ResultSet rs = stm.executeQuery();
+            rs = stm.executeQuery();
 
             if (rs.next()) {
                 int descuento = rs.getInt("descuento");
@@ -204,6 +269,14 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        }finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetalleXPromocionDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         System.out.println(precioConDescuento);
         return precioConDescuento;
@@ -211,13 +284,19 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
 
     private float obtenerPrecioProducto(String idProducto) {
         float precioProducto = 0;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
 
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
-            Connection connec = db.getConnection();
-            PreparedStatement stm = connec.prepareStatement(SQL_CONSULTAR_PRECIO_PRODUCTO);
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_CONSULTAR_PRECIO_PRODUCTO);
+            
             stm.setString(1, idProducto);
-            ResultSet rs = stm.executeQuery();
+            
+            rs = stm.executeQuery();
 
             if (rs.next()) {
                 precioProducto = rs.getFloat("precio");
@@ -226,6 +305,14 @@ public class DetalleXPromocionDao implements DetalleXPromocionServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        }finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetalleXPromocionDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return precioProducto;

@@ -5,7 +5,10 @@
 package Red;
 import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 /**
  *
  * @author Alison Martinez
@@ -13,7 +16,8 @@ import java.sql.SQLException;
 public class BaseDeDatos {
     private static BasicDataSource bs = new BasicDataSource();
     private static BaseDeDatos instance;
-    private final static String URL = "jdbc:mysql://54.147.25.136:3306/supermecado?useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+    //private final static String URL = "jdbc:mysql://localhost:3306/supermecado?useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+    private final static String URL = "jdbc:mysql://3.95.231.187:3306/supermecado?useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     private final static String USERNAME = "test";
     private static String PASSWORD = "test1_*";
     
@@ -36,5 +40,20 @@ public class BaseDeDatos {
     
     public Connection getConnection() throws SQLException {
         return bs.getConnection();
+    }
+    public static void close(Connection con) throws SQLException{
+        con.close();
+    }
+    
+    public static void close(Statement stm) throws SQLException{
+        stm.close();
+    }
+    
+    public static void close(ResultSet res) throws SQLException{
+        res.close();
+    }
+    
+    public static void close(PreparedStatement ps) throws SQLException{
+        ps.close();
     }
 }
