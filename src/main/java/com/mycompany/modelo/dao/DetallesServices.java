@@ -16,6 +16,7 @@ public interface DetallesServices {
      public List<Map<String, Object>> consultar();
     public List<Map<String, Object>> consultarId(Detalles detalles);
     public int crear(Detalles detalles);
+    public int actualizar(Detalles detalle);
     //public int eliminar(Detalles detalles);
     public int restarProducto(Detalles detalles);
     public int sumarProducto(Detalles detalles);

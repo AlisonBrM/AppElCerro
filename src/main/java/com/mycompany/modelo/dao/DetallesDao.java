@@ -58,6 +58,7 @@ public class DetallesDao implements DetallesServices {
 
     private final String SQL_BUSCAR_PRODUCTO = "SELECT * FROM detalle WHERE id_carrito = ? AND id_producto = ?";
     private final String SQL_INSERTAR = "INSERT INTO detalle(id_carrito, id_producto, cantidad) VALUES(?,?,?)";
+    private final String SQL_ACTUALIZAR = "UPDATE detalle SET cantidad = ? WHERE id_carrito = ? AND id_producto = ?";
     private final String SQL_BORRAR_PRODUCTO = "UPDATE detalle SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ?";
     private final String SQL_AGREGAR_PORDUCTO = "UPDATE detalle SET cantidad = cantidad + 1 WHERE id_carrito = ? AND id_producto = ?";
     private final String SQL_TIENE_PRODUCTOS = "SELECT * FROM detalle WHERE id_carrito = ?";
@@ -166,7 +167,7 @@ public class DetallesDao implements DetallesServices {
                 carrito.activar(new Carrito(detalles.getId_carrito().getId()));
             }
             if (existeProducto(detalles)) {
-                sumarProducto(detalles);
+                actualizar(detalles);
             } else {
                 BaseDeDatos db = BaseDeDatos.getInstance();
                 connection = db.getConnection();
@@ -183,6 +184,39 @@ public class DetallesDao implements DetallesServices {
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
         } finally {
+            try {
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(DetallesDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return registros;
+    }
+    
+    @Override
+    public int actualizar(Detalles detalle) {
+        int registros = 0;
+        
+        Connection connection = null;
+        PreparedStatement stm = null;
+        
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            connection = db.getConnection();
+            stm = connection.prepareStatement(SQL_ACTUALIZAR);
+            
+            stm.setInt(1, detalle.getCantidad());
+            stm.setInt(2, detalle.getId_carrito().getId());
+            stm.setString(3, detalle.getId_producto().getId());
+
+            registros = stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+
+        }finally {
             try {
                 BaseDeDatos.close(stm);
                 BaseDeDatos.close(connection);

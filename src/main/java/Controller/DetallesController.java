@@ -32,6 +32,10 @@ public class DetallesController {
         return detalles.crear(detallesCrear);
     }
     
+    public int actualizar(Detalles detalle){
+        return detalles.actualizar(detalle);
+    }
+    
     public int restarProducto(Detalles detallesEliminar){
         return detalles.restarProducto(detallesEliminar);
     }
