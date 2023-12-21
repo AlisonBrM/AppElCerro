@@ -4,6 +4,7 @@
  */
 package com.mycompany.modelo.dao;
 
+import Controller.DetallesController;
 import com.mycompany.modelo.entity.Carrito;
 import com.mycompany.modelo.entity.Detalles;
 import com.mycompany.modelo.entity.Producto;
@@ -16,10 +17,14 @@ import com.mycompany.modelo.entity.Producto;
 public class TestDetallesDao {
     public static void main(String[] args) {
         DetallesDao d = new DetallesDao();
-        Carrito car = new Carrito(3);
+        DetallesController cd = new DetallesController();
+        Carrito car = new Carrito(88244292);
         Producto p = new Producto("18");
         int r = 0;
-        r = d.crear(new Detalles(car, p, 3));
+        
+        cd.comprar(new Detalles(car));
+        
+        //r = d.crear(new Detalles(car, p, 3));
         //r = d.restarProducto(new Detalles(car, p));
         //r = d.sumarProducto(new Detalles(car, p));
         
