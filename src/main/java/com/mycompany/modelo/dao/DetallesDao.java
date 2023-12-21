@@ -161,13 +161,15 @@ public class DetallesDao implements DetallesServices {
         int registros = 0;
         Connection connection = null;
         PreparedStatement stm = null;
+
         try {
             if (!tieneProductos(detalles)) {
                 CarritoDao carrito = new CarritoDao();
                 carrito.activar(new Carrito(detalles.getId_carrito().getId()));
             }
+
             if (existeProducto(detalles)) {
-                actualizar(detalles);
+                sumarProducto(detalles);
             } else {
                 BaseDeDatos db = BaseDeDatos.getInstance();
                 connection = db.getConnection();
@@ -180,32 +182,38 @@ public class DetallesDao implements DetallesServices {
                 registros = stm.executeUpdate();
             }
         } catch (SQLException ex) {
-            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al ejecutar la consulta: " + ex.getMessage());
         } finally {
             try {
-                BaseDeDatos.close(stm);
-                BaseDeDatos.close(connection);
+                // Cerrar el PreparedStatement y la conexión en el bloque finally
+                if (stm != null) {
+                    stm.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException ex) {
-                Logger.getLogger(DetallesDao.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error al cerrar recursos: " + ex.getMessage());
             }
         }
+
         return registros;
     }
-    
+
     @Override
     public int actualizar(Detalles detalle) {
         int registros = 0;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
             stm = connection.prepareStatement(SQL_ACTUALIZAR);
-            
+
             stm.setInt(1, detalle.getCantidad());
             stm.setInt(2, detalle.getId_carrito().getId());
             stm.setString(3, detalle.getId_producto().getId());
@@ -216,7 +224,7 @@ public class DetallesDao implements DetallesServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
-        }finally {
+        } finally {
             try {
                 BaseDeDatos.close(stm);
                 BaseDeDatos.close(connection);
@@ -344,7 +352,7 @@ public class DetallesDao implements DetallesServices {
             stm = connection.prepareStatement(SQL_BUSCAR_PRODUCTO);
             stm.setInt(1, detalle.getId_carrito().getId());
             stm.setString(2, detalle.getId_producto().getId());
-            
+
             rs = stm.executeQuery();
 
             existe = rs.next();
@@ -376,9 +384,10 @@ public class DetallesDao implements DetallesServices {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
             stm = connection.prepareStatement(SQL_TIENE_PRODUCTOS);
-            rs = stm.executeQuery();
+            
 
             stm.setInt(1, detalle.getId_carrito().getId());
+            rs = stm.executeQuery();
 
             int sumaCantidades = 0;
             while (rs.next()) {

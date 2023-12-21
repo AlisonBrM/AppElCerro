@@ -6,6 +6,7 @@ package com.mycompany.modelo.dao;
 
 import Red.BaseDeDatos;
 import com.mycompany.modelo.entity.Usuario;
+import java.awt.GraphicsEnvironment;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +33,7 @@ public class UsuarioDao implements UsuarioServices {
 
     @Override
     public List<Usuario> consultar() {
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -72,18 +73,18 @@ public class UsuarioDao implements UsuarioServices {
     @Override
     public Usuario consultarId(Usuario usuario) {
         Usuario productoResultado = null;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
             stm = connection.prepareStatement(SQL_CONSULTAID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_FORWARD_ONLY);
-            
+
             stm.setString(1, usuario.getCedula());
-            
+
             rs = stm.executeQuery();
 
             rs.absolute(1);
@@ -97,8 +98,10 @@ public class UsuarioDao implements UsuarioServices {
 
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }finally {
+            if (!GraphicsEnvironment.isHeadless()) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        } finally {
             try {
                 BaseDeDatos.close(rs);
                 BaseDeDatos.close(stm);
@@ -113,15 +116,15 @@ public class UsuarioDao implements UsuarioServices {
     @Override
     public int crear(Usuario usuario) {
         int registros = 0;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
             stm = connection.prepareStatement(SQL_INSERTAR);
-           
+
             stm.setString(1, usuario.getCedula());
             stm.setString(2, usuario.getNombre());
             stm.setString(3, usuario.getDireccion());
@@ -131,9 +134,9 @@ public class UsuarioDao implements UsuarioServices {
 
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            //JOptionPane.showMessageDialog(null, ex.getMessage());
 
-        }finally {
+        } finally {
             try {
                 BaseDeDatos.close(stm);
                 BaseDeDatos.close(connection);
@@ -147,15 +150,15 @@ public class UsuarioDao implements UsuarioServices {
     @Override
     public int eliminar(Usuario usuario) {
         int registros = 0;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
             stm = connection.prepareStatement(SQL_BORRAR);
-            
+
             stm.setString(1, usuario.getCedula());
             registros = stm.executeUpdate();
 
@@ -163,7 +166,7 @@ public class UsuarioDao implements UsuarioServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
-        }finally {
+        } finally {
             try {
                 BaseDeDatos.close(stm);
                 BaseDeDatos.close(connection);
@@ -178,15 +181,15 @@ public class UsuarioDao implements UsuarioServices {
     @Override
     public int actualizar(Usuario usuario) {
         int registros = 0;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
             stm = connection.prepareStatement(SQL_ACTUALIZAR);
-            
+
             stm.setString(1, usuario.getNombre());
             stm.setString(2, usuario.getDireccion());
             stm.setString(3, usuario.getCorreo());
@@ -199,7 +202,7 @@ public class UsuarioDao implements UsuarioServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
-        }finally {
+        } finally {
             try {
                 BaseDeDatos.close(stm);
                 BaseDeDatos.close(connection);

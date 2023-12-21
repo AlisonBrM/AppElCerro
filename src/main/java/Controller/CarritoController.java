@@ -42,4 +42,8 @@ public class CarritoController {
     public int desactivar(Carrito carritoActualizar){
         return carrito.desactivar(carritoActualizar);
     }
+    
+    public List<Carrito> carritoUsuario(Carrito idUsuario){
+        return carrito.carritoUsuario(idUsuario);
+    }
 }

@@ -16,8 +16,8 @@ import java.sql.Statement;
 public class BaseDeDatos {
     private static BasicDataSource bs = new BasicDataSource();
     private static BaseDeDatos instance;
-    //private final static String URL = "jdbc:mysql://localhost:3306/supermecado?useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-    private final static String URL = "jdbc:mysql://3.95.231.187:3306/supermecado?useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+    private final static String URL = "jdbc:mysql://localhost:3306/supermecado?useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+    //private final static String URL = "jdbc:mysql://3.95.231.187:3306/supermecado?useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     private final static String USERNAME = "test";
     private static String PASSWORD = "test1_*";
     

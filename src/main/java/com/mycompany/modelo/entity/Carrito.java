@@ -39,6 +39,10 @@ public class Carrito {
         this.id = id;
         this.activo = activo;
     }
+    
+    public Carrito(Usuario id_usuario) {
+        this.id_usuario = id_usuario;
+    }
 
     public Carrito(int id) {
         this.id = id;

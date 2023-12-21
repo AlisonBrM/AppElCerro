@@ -10,6 +10,7 @@ package com.mycompany.elcerro.resources;
  */
 import Controller.CarritoController;
 import com.mycompany.modelo.entity.Carrito;
+import com.mycompany.modelo.entity.Usuario;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -57,6 +58,20 @@ public class CarriroResources {
                 .status(200)
                 .header("Access-Control-Allow-Origin", "*")
                 .entity(carritoR)
+                .build();
+    }
+    
+    @GET
+    @Path("/carritoUsuario/{id_usuario}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCarritoIdUser(@PathParam("id_usuario") String id){
+        List<Carrito> carritos = new ArrayList();
+        carritos = carritoController.carritoUsuario(new Carrito(new Usuario(id)));
+        
+        return Response 
+                .status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .entity(carritos)
                 .build();
     }
     

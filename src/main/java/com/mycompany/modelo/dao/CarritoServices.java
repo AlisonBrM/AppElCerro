@@ -19,4 +19,5 @@ public interface CarritoServices {
     public int actualizar(Carrito carrito);
     public int activar(Carrito carrito);
     public int desactivar(Carrito carrito);
+    public List<Carrito> carritoUsuario(Carrito idUsuario);
 }

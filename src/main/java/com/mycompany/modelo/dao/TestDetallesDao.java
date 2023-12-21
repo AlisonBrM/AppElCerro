@@ -16,10 +16,10 @@ import com.mycompany.modelo.entity.Producto;
 public class TestDetallesDao {
     public static void main(String[] args) {
         DetallesDao d = new DetallesDao();
-        Carrito car = new Carrito(1);
+        Carrito car = new Carrito(3);
         Producto p = new Producto("18");
         int r = 0;
-        //r = d.crear(new Detalles(car, p, 1));
+        r = d.crear(new Detalles(car, p, 3));
         //r = d.restarProducto(new Detalles(car, p));
         //r = d.sumarProducto(new Detalles(car, p));
         

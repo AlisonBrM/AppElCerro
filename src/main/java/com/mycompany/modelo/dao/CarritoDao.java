@@ -36,7 +36,7 @@ public class CarritoDao implements CarritoServices {
 
     @Override
     public List<Carrito> consultar() {
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -80,11 +80,11 @@ public class CarritoDao implements CarritoServices {
     @Override
     public Carrito consultarId(Carrito carrito) {
         Carrito carritoResultado = null;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
@@ -106,7 +106,7 @@ public class CarritoDao implements CarritoServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
-        }finally {
+        } finally {
             try {
                 BaseDeDatos.close(rs);
                 BaseDeDatos.close(stm);
@@ -121,10 +121,10 @@ public class CarritoDao implements CarritoServices {
     @Override
     public int crear(Carrito carrito) {
         int registros = 0;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
@@ -134,7 +134,7 @@ public class CarritoDao implements CarritoServices {
             java.sql.Date fecha = new java.sql.Date(fechaNula);
 
             stm = connection.prepareStatement(SQL_INSERTAR);
-            
+
             stm.setInt(1, carrito.getId());
             stm.setString(2, carrito.getId_usuario().getCedula());
             stm.setDate(3, fecha);
@@ -145,7 +145,7 @@ public class CarritoDao implements CarritoServices {
         } catch (SQLException ex) {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
-        }finally {
+        } finally {
             try {
                 BaseDeDatos.close(stm);
                 BaseDeDatos.close(connection);
@@ -159,10 +159,10 @@ public class CarritoDao implements CarritoServices {
     @Override
     public int eliminar(Carrito carrito) {
         int registros = 0;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
@@ -174,7 +174,7 @@ public class CarritoDao implements CarritoServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
-        }finally {
+        } finally {
             try {
                 BaseDeDatos.close(stm);
                 BaseDeDatos.close(connection);
@@ -189,10 +189,10 @@ public class CarritoDao implements CarritoServices {
     @Override
     public int actualizar(Carrito carrito) {
         int registros = 0;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
@@ -212,7 +212,7 @@ public class CarritoDao implements CarritoServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
-        }finally {
+        } finally {
             try {
                 BaseDeDatos.close(stm);
                 BaseDeDatos.close(connection);
@@ -222,15 +222,15 @@ public class CarritoDao implements CarritoServices {
         }
         return registros;
     }
-    
+
     @Override
     public int activar(Carrito carrito) {
         int registros = 0;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
@@ -250,7 +250,7 @@ public class CarritoDao implements CarritoServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
-        }finally {
+        } finally {
             try {
                 BaseDeDatos.close(stm);
                 BaseDeDatos.close(connection);
@@ -260,14 +260,59 @@ public class CarritoDao implements CarritoServices {
         }
         return registros;
     }
-    
+
+    @Override
+    public List<Carrito> carritoUsuario(Carrito idUsuario) {
+        List<Carrito> carritoUser = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            BaseDeDatos db = BaseDeDatos.getInstance();
+            connection = db.getConnection();
+
+            String sql = "SELECT * FROM carrito WHERE id_usuario = ?";
+            stm = connection.prepareStatement(sql);
+            stm.setString(1, idUsuario.getId_usuario().getCedula());
+            rs = stm.executeQuery();
+
+            if (rs.next()) {
+                UsuarioDao usuarioDao = new UsuarioDao();
+
+                int idCarrito = rs.getInt("id");
+                Usuario usuario = usuarioDao.consultarId(new Usuario(idUsuario.getId_usuario().getCedula()));
+                Date fecha = rs.getDate("fecha");
+                int activo = rs.getInt("activo");
+
+                Carrito carrito = new Carrito(idCarrito, usuario, fecha, activo);
+                carritoUser.add(carrito);
+                
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        } finally {
+            try {
+                BaseDeDatos.close(rs);
+                BaseDeDatos.close(stm);
+                BaseDeDatos.close(connection);
+            } catch (SQLException ex) {
+                Logger.getLogger(CarritoDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return carritoUser;
+    }
+
     @Override
     public int desactivar(Carrito carrito) {
         int registros = 0;
-        
+
         Connection connection = null;
         PreparedStatement stm = null;
-        
+
         try {
             BaseDeDatos db = BaseDeDatos.getInstance();
             connection = db.getConnection();
@@ -287,7 +332,7 @@ public class CarritoDao implements CarritoServices {
             System.out.println("Mensaje: " + Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, ex.getMessage());
 
-        }finally {
+        } finally {
             try {
                 BaseDeDatos.close(stm);
                 BaseDeDatos.close(connection);

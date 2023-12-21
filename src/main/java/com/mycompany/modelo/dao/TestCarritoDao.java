@@ -18,10 +18,15 @@ public class TestCarritoDao {
     public static void main(String[] args) throws ParseException {
         CarritoDao car = new CarritoDao();
         Usuario usuario = new Usuario("2");
-        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-        Date fecha = formato.parse("2323-12-11");
         
-        int r = car.crear(new Carrito(2, usuario));
+        int r = 0;
+        
+        //SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        //Date fecha = formato.parse("2323-12-11");
+        
+        System.out.println(car.carritoUsuario(new Carrito(usuario)));
+        
+        //int r = car.crear(new Carrito(2, usuario));
         System.out.println(r);
     }
 }
